@@ -38,3 +38,8 @@ plugins:
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
+
+# gitalk settings
+comment_gitalk_clientId: 333feac7401d7c826f57
+comment_gitalk_clientSecret: 63261b05c88f81ee295ea110dacc40ac3b7d0e14
+comment_gitalk_repo: guozijn.github.io
