@@ -31,3 +31,5 @@ gem "wdm", ">= 0.1.0" if Gem.win_platform?
 gem "kramdown", ">= 2.3.0"
 
 gem "kramdown-parser-gfm", ">= 1.1.0"
+
+gem "webrick", "~> 1.7"
