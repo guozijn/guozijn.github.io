@@ -19,7 +19,7 @@ description: >- # this means to ignore newlines until "baseurl:"
   郭子健的个人博客
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://zijianguo.com" # the base hostname & protocol for your site, e.g. http://example.com
-github_username:  guozijn
+github_username: guozijn
 
 # Build settings
 markdown: kramdown
@@ -38,8 +38,3 @@ plugins:
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
-
-# gitalk settings
-comment_gitalk_clientId: 333feac7401d7c826f57
-comment_gitalk_clientSecret: 63261b05c88f81ee295ea110dacc40ac3b7d0e14
-comment_gitalk_repo: guozijn.github.io
