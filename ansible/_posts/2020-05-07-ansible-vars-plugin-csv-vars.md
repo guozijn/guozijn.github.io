@@ -146,12 +146,14 @@ EOF
 
 ```yaml
 # cat test_vars.yml
+{% raw %}
 - hosts: 192.168.77.130
   gather_facts: no
   tasks:
     - debug:
         msg: "{{ lookup('vars', item) }}"
       loop: "{{ hostvars[inventory_hostname].keys() | select('match', '^vlan.*$|gateway') | list }}"
+{% endraw %}
 ```
 
 执行结果
