@@ -16,10 +16,12 @@
 title: 学无止境
 email: guozijn@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  郭子健的个人博客
+  Strive for human progress
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://zijianguo.com" # the base hostname & protocol for your site, e.g. http://example.com
 github_username: guozijn
+linkedin_username: guozijn
+twitter_username: guozijn
+url: "https://blog.zijianguo.com" # the base hostname & protocol for your site, e.g. http://example.com
 
 # Build settings
 markdown: kramdown
@@ -38,3 +40,7 @@ plugins:
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
+
+# Comments
+disqus:
+  shortname: guozijn
