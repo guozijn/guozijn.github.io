@@ -1,0 +1,63 @@
+---
+layout: default
+---
+
+<div class="home home-with-sidebar">
+  <div class="home-main">
+    {%- if page.title -%}
+      <h1 class="page-heading">{{ page.title }}</h1>
+    {%- endif -%}
+
+    {{ content }}
+
+    {%- if site.posts.size > 0 -%}
+      <h2 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h2>
+      <ul class="post-list">
+        {%- for post in site.posts -%}
+          <li>
+            {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+            <span class="post-meta">{{ post.date | date: date_format }}</span>
+            <h3>
+              <a class="post-link" href="{{ post.url | relative_url }}">
+                {{ post.title | escape }}
+              </a>
+            </h3>
+            {%- if site.show_excerpts -%}
+              {{ post.excerpt }}
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      {%- if site.paginate -%}
+        <div class="pager">
+          {%- if paginator.previous_page -%}
+            <a href="{{ paginator.previous_page_path | relative_url }}" class="previous-page">{{ paginator.previous_page_title | default: "Previous" }}</a>
+          {%- endif -%}
+          {%- if paginator.next_page -%}
+            <a href="{{ paginator.next_page_path | relative_url }}" class="next-page">{{ paginator.next_page_title | default: "Next" }}</a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
+    {%- endif -%}
+  </div>
+
+  {%- if site.tags and site.tags.size > 0 -%}
+    <aside class="home-sidebar">
+      <h2 class="home-sidebar__title">Tags</h2>
+      <ul class="home-sidebar__list">
+        {%- assign sorted_tags = site.tags | sort -%}
+        {%- for tag in sorted_tags -%}
+          <li class="home-sidebar__item">
+            <a class="home-sidebar__link" href="{{ '/tags/' | relative_url }}#{{ tag[0] | slugify }}">
+              <span class="home-sidebar__tag">{{ tag[0] }}</span>
+              <span class="home-sidebar__count">{{ tag[1].size }}</span>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </aside>
+  {%- endif -%}
+</div>
