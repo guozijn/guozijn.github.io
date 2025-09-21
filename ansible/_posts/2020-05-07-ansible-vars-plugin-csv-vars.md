@@ -1,7 +1,3 @@
-csv 文件示例
-
-# vars plugins: csv_vars
-
 ## Requirement
 
 Parse data from CSV into host variables.
