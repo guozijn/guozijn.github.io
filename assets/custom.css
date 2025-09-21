@@ -1,0 +1,22 @@
+body {
+  background: #fff8f0;
+}
+/* VS Code Light+ inspired code highlight style */
+.highlight, pre, code {
+  background: #ffffff !important;
+  color: #333333 !important;
+  border-radius: 6px;
+  font-family: 'Fira Mono', 'Consolas', 'Menlo', 'Monaco', 'Liberation Mono', 'Courier New', monospace;
+  font-size: 1em;
+}
+.highlight .c, .highlight .cm { color: #008000; } /* comment */
+.highlight .k, .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kt { color: #0000ff; } /* keyword */
+.highlight .s, .highlight .sa, .highlight .sb, .highlight .sc, .highlight .sd, .highlight .s2, .highlight .se, .highlight .sh, .highlight .si, .highlight .sx, .highlight .sr, .highlight .ss { color: #a31515; } /* string */
+.highlight .n, .highlight .na, .highlight .nb, .highlight .nc, .highlight .no, .highlight .nd, .highlight .ni, .highlight .ne, .highlight .nf, .highlight .nl, .highlight .nn, .highlight .nx, .highlight .py, .highlight .nt, .highlight .nv, .highlight .vc, .highlight .vg, .highlight .vi, .highlight .vm { color: #333333; }
+.highlight .m, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .mo, .highlight .il { color: #098658; } /* number */
+.highlight .o, .highlight .ow { color: #000000; } /* operator */
+.highlight .p { color: #333333; } /* punctuation */
+.highlight .gd { color: #a31515; background-color: #ffebe9; } /* deleted */
+.highlight .gi { color: #098658; background-color: #eaffea; } /* inserted */
+.highlight .ge { font-style: italic; }
+.highlight .gs { font-weight: bold; }
