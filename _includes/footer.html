@@ -6,15 +6,24 @@
       <div class="footer-row-horizontal" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5em; margin-bottom: 1em;">
         <div>
           {%- if site.email -%}
-            <a class="u-email" href="mailto:{{ site.email }}" style="margin-right: 1.5em;">{{ site.email }}</a>
+            <a class="u-email" href="mailto:{{ site.email }}" style="margin-right: 1.5em; display: inline-flex; align-items: center; gap: 0.3em;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,6 12,13 2,6"/></svg>
+              {{ site.email }}
+            </a>
           {%- endif -%}
         </div>
         <div style="display: flex; align-items: center; gap: 1.5em;">
           {%- if site.github_username -%}
-            <a href="https://github.com/{{ site.github_username }}" target="_blank" rel="noopener"> <svg height="18" width="18" style="vertical-align: middle;"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> {{ site.github_username }}</a>
+            <a href="https://github.com/{{ site.github_username }}" target="_blank" rel="noopener">
+              <svg height="18" width="18" style="vertical-align: middle; fill: #888;"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg>
+              {{ site.github_username }}
+            </a>
           {%- endif -%}
           {%- if site.linkedin_username -%}
-            <a href="https://linkedin.com/in/{{ site.linkedin_username }}" target="_blank" rel="noopener"> <svg height="18" width="18" style="vertical-align: middle;"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> {{ site.linkedin_username }}</a>
+            <a href="https://linkedin.com/in/{{ site.linkedin_username }}" target="_blank" rel="noopener">
+              <svg height="18" width="18" style="vertical-align: middle; fill: #888;"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg>
+              {{ site.linkedin_username }}
+            </a>
           {%- endif -%}
         </div>
       </div>
