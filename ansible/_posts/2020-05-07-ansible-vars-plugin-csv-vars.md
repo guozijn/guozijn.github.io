@@ -1,138 +1,36 @@
+csv 文件示例
+
 # vars plugins: csv_vars
 
-## 需求
+## Requirement
 
-将 csv 中的数据解析为主机变量
+Parse data from CSV into host variables.
 
-csv 文件示例
+CSV file example:
 
 ```csv
 hostname,gateway,vlan30,vlan40,vlan50,vlan60,vlan70
 localhost,192.168.30.254,192.168.30.31,192.168.40.31,192.168.50.31,192.168.60.31,192.168.70.31
 ```
 
-- 将 csv 文件放在 `inventory` 或 `playbook` 下的`csv_vars`目录中，就会被自动解析。
-- csv 中的 `hostname` 字段要与 `inventory` 的主机名称一致。
-- 建议将 csv 命名为 GROUP_OR_HOST_NAME.csv，支持多个 csv 文件，并且支持变量覆盖。
+- Place the CSV file in the `csv_vars` directory under `inventory` or `playbook`, and it will be automatically parsed.
+- The `hostname` field in the CSV must match the host name in the inventory.
+- It is recommended to name the CSV as GROUP_OR_HOST_NAME.csv. Multiple CSV files are supported, and variable overriding is also supported.
 
-## 编写插件
+## Write the Plugin
 
-文件路径 `vars_plugins/csv_vars.py`
+File path: `vars_plugins/csv_vars.py`
 
 ```python
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# Copyright 2019 Zijian Guo <guozijian@unitedstack.com>, <guozijn@gmail.com>
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-from __future__ import print_function
-
-DOCUMENTATION = '''
-    vars: uos_net_vars
-    short_description: Parsing vars from csv file
-    description:
-        - Load YAML variable into ansible host corresponding to "hostname" in csv_vars/servers.csv file.
-    options:
-      _valid_extensions:
-        default: [".csv"]
-'''
-
-from ansible.errors import AnsibleParserError
-from ansible.inventory.group import Group
-from ansible.inventory.host import Host
-from ansible.module_utils._text import to_bytes
-from ansible.module_utils._text import to_native
-from ansible.plugins.vars import BaseVarsPlugin
-from ansible.utils.vars import combine_vars
-import csv
-import glob
-import os
-import yaml
-
-FOUND = {}
-
-VARS = {}
-
-def load_from_csv(file_name):
-    with open(file_name, 'r') as csv_data:
-        reader = csv.DictReader(csv_data)
-        out = yaml.safe_dump([row for row in reader])
-    for var in yaml.safe_load(out):
-        for k, v in var.items():
-            if k == 'hostname':
-                VARS[v] = var
-
-class VarsModule(BaseVarsPlugin):
-
-    def get_vars(self, loader, path, entities, cache=True):
-        '''parses the csv file'''
-        if not isinstance(entities, list):
-            entities = [entities]
-
-        super(VarsModule, self).get_vars(loader, path, entities)
-
-        data = {}
-        subdir = 'csv_vars'
-
-        for entity in entities:
-            if isinstance(entity, Host):
-                pass
-            elif isinstance(entity, Group):
-                continue
-            else:
-                raise AnsibleParserError(
-                    "Supplied entity must be Host or got %s instead"
-                    % (type(entity))
-                )
-
-            # avoid 'chroot' type inventory hostnames /path/to/chroot
-            if not entity.name.startswith(os.path.sep):
-                try:
-                    found_files = []
-                    # load vars
-                    opath = os.path.realpath(os.path.join(self._basedir, subdir))
-                    key = '%s.%s' % (entity.name, opath)
-                    if cache and key in FOUND:
-                        found_files = FOUND[key]
-                    else:
-                        b_opath = to_bytes(opath)
-                        # no need to do much if path does not exist for basedir
-                        if os.path.exists(b_opath):
-                            if os.path.isdir(b_opath):
-                                self._display.debug("\tprocessing dir %s" % opath)
-                                found_files = glob.glob("%s/*.csv" % opath)
-                                FOUND[key] = found_files
-                            else:
-                                self._display.warning(
-                                    "Found %s that is not a directory, \
-                                    skipping: %s" % (subdir, opath)
-                                )
-                    for found in found_files:
-                        load_from_csv(found)
-                        new_data = VARS.get(entity.name, {})
-                        data = combine_vars(data, new_data)
-
-                except Exception as e:
-                    raise AnsibleParserError(to_native(e))
-        return data
+...existing code...
 ```
-> 代码来自 https://github.com/guozijn/csv_vars
+> Code from https://github.com/guozijn/csv_vars
 
 
-## csv 文件
 
-将 csv 文件放在 inventory 或 playbook 下的`csv_vars`目录中
+## CSV File
+
+Place the CSV file in the `csv_vars` directory under inventory or playbook.
 
 ```bash
 mdkir csv_vars
@@ -142,7 +40,7 @@ hostname,gateway,vlan30,vlan40,vlan50,vlan60,vlan70
 EOF
 ```
 
-## 执行 playbook
+## Run Playbook
 
 ```yaml
 # cat test_vars.yml
@@ -156,7 +54,7 @@ EOF
 {% endraw %}
 ```
 
-执行结果
+Execution result:
 
 ```bash
 # ansible-playbook test_vars.yml
@@ -188,9 +86,9 @@ PLAY RECAP *********************************************************************
 
 ```
 
-## 执行 ad-hoc
+## Run ad-hoc
 
-配置`ansible.cfg`,设置自定义的插件目录
+Configure `ansible.cfg` to set the custom plugin directory:
 
 ```ini
 [defaults]
