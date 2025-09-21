@@ -1,3 +1,6 @@
+---
+tags: [ansible, devops]
+---
 ## Requirement
 
 Parse data from CSV into host variables.
