@@ -45,3 +45,4 @@ lang: en
 # Comments
 disqus:
   shortname: guozijn
+home_posts_limit: 10

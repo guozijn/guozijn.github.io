@@ -267,8 +267,23 @@ p { color: var(--text-secondary); }
 }
 .home-sidebar__title { font-size: 1.1rem; font-weight: 600; margin: 0 0 1.2rem; }
 .home-sidebar__list {
-  list-style: none; margin: 0; padding: 0;
-  display: grid; gap: 0.65rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.65rem;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.home-sidebar__list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.home-sidebar__list::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
 }
 .home-sidebar__item { font-size: 0.95rem; }
 .home-sidebar__link {
