@@ -3,6 +3,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   {%- seo -%}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}">
   <link rel="stylesheet" href="{{ "/assets/custom.css" | relative_url }}">
   {%- feed_meta -%}
@@ -13,4 +16,28 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="manifest" href="/site.webmanifest">
+  <script>
+    // Dark mode toggle logic
+    document.addEventListener('DOMContentLoaded', function() {
+      const root = document.documentElement;
+      const darkModeKey = 'site-dark-mode';
+      function setDarkMode(on) {
+        if (on) {
+          root.classList.add('dark-mode');
+          localStorage.setItem(darkModeKey, '1');
+        } else {
+          root.classList.remove('dark-mode');
+          localStorage.setItem(darkModeKey, '0');
+        }
+      }
+      // Initial mode
+      if (localStorage.getItem(darkModeKey) === '1') {
+        root.classList.add('dark-mode');
+      }
+      // Toggle button
+      window.toggleDarkMode = function() {
+        setDarkMode(!root.classList.contains('dark-mode'));
+      }
+    });
+  </script>
 </head>

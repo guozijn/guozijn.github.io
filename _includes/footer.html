@@ -1,36 +1,18 @@
 <footer class="site-footer h-card">
-    <data class="u-url" href="{{ "/" | relative_url }}"></data>
-  
-    <div class="wrapper">
-  
-      <div class="footer-row-horizontal" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5em; margin-bottom: 1em;">
-        <div>
-          {%- if site.email -%}
-            <a class="u-email" href="mailto:{{ site.email }}" style="margin-right: 1.5em; display: inline-flex; align-items: center; gap: 0.3em;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,6 12,13 2,6"/></svg>
-              {{ site.email }}
-            </a>
-          {%- endif -%}
-        </div>
-        <div style="display: flex; align-items: center; gap: 1.5em;">
-          {%- if site.github_username -%}
-            <a href="https://github.com/{{ site.github_username }}" target="_blank" rel="noopener">
-              <svg height="18" width="18" style="vertical-align: middle; fill: #888;"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg>
-              {{ site.github_username }}
-            </a>
-          {%- endif -%}
-          {%- if site.linkedin_username -%}
-            <a href="https://linkedin.com/in/{{ site.linkedin_username }}" target="_blank" rel="noopener">
-              <svg height="18" width="18" style="vertical-align: middle; fill: #888;"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg>
-              {{ site.linkedin_username }}
-            </a>
-          {%- endif -%}
-        </div>
+  <data class="u-url" href="{{ "/" | relative_url }}"></data>
+  <div class="wrapper site-footer__inner">
+    <div class="site-footer__top" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.2rem; padding: 1.2rem 0 0.5rem;">
+      <div class="site-footer__brand" style="font-size: 0.98rem; color: #888;">
+        {%- if site.description and site.description != '' -%}
+          <p class="site-footer__description" style="margin: 0;">{{ site.description | escape }}</p>
+        {%- endif -%}
       </div>
-      <div class="footer-col footer-col-3">
-        <p>{{- site.description | escape -}}</p>
-      </div>
-  
     </div>
-  
-  </footer>
+    <div class="site-footer__bottom" style="font-size: 0.92rem; color: #aaa; text-align: center; padding: 0.2rem 0 0.1rem;">
+      <div style="margin-bottom: 0.3em; text-align: center; width: 100%;">
+        <button onclick="toggleDarkMode()" style="padding:0.22em 1em; border-radius:999px; border:none; background:#eee; color:#555555; font-size:0.95em; cursor:pointer; transition:background 0.18s;">🌙 Dark Mode</button>
+      </div>
+      <span>© {{ site.time | date: "%Y" }} {{ site.title }}</span>
+    </div>
+  </div>
+</footer>
