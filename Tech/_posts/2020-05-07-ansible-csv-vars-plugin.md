@@ -1,7 +1,10 @@
 ---
-tags: [ansible, devops]
+title: "Ansible Csv Vars Plugin"
+tags:
+  - ansible
+  - devops
 ---
-## Requirement
+## Requirements
 
 Parse data from CSV into host variables.
 
