@@ -96,12 +96,7 @@ p { color: var(--text-secondary); }
   color: var(--accent-strong);
 }
 
-.site-nav {
-  position: static;
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-}
+.site-nav{ margin-left: auto; }
 .site-nav .page-link {
   color: var(--text-secondary);
   font-weight: 500;
@@ -137,7 +132,6 @@ p { color: var(--text-secondary); }
 .highlight .gs { font-weight: bold; }
 
 /* -------------------- Theme: Dark Mode -------------------- */
-/* 使用 :root.dark-mode 切换变量；以下是组件在暗色下的额外样式 */
 .dark-mode .site-header {
   background: #23262f;
   box-shadow: 0 18px 36px -28px rgba(0,0,0,0.45);
@@ -163,6 +157,19 @@ p { color: var(--text-secondary); }
 .dark-mode .site-footer__links a { color: #a1a1aa; }
 .dark-mode .site-footer__links a:hover { color: var(--accent); }
 .dark-mode .site-footer__bottom { color: #a1a1aa; }
+
+.dark-mode .home-hero__link,
+.dark-mode .site-footer__pill {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.dark-mode .home-hero__link:hover,
+.dark-mode .site-footer__pill:hover {
+  background: var(--accent);
+  color: #ffffff;
+}
 
 /* VSCode Dark+ Theme */
 .dark-mode .highlight, .dark-mode pre, .dark-mode code {
