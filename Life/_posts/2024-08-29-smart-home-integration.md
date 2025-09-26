@@ -34,14 +34,16 @@ tags:
 
 ## 三、设备接入
 
-### 1. 米家设备
+### 米家设备
 
 接入流程：
 
 1. 确认有 **家庭中枢**（HomePod / iPad），才能实现远程控制。
+
 2. 在 HACS 安装插件 **Xiaomi Miot Auto**。
 
     ![Xiaomi Miot Auto](https://images.zijianguo.com/ha03.png){:width="90%"}
+
 3. 添加米家账号并导入设备。
 
     ![Device and Service](https://images.zijianguo.com/ha05.png){:width="90%"}
@@ -57,7 +59,7 @@ tags:
 
 ![homeapp](https://images.zijianguo.com/homeapp.jpeg){:width="30%"}
 
-### 2. 涂鸦设备
+### 涂鸦设备
 
 主要用于红外 / 射频控制的电器，例如电视、晾衣架。
 
@@ -77,7 +79,7 @@ tags:
 
     ![ty04](https://images.zijianguo.com/ty04.png){:width="90%"}
 
-### 3. 其他设备接入方案
+### 其他设备接入方案
 
 - **灯具**：  
   - 灯条控制：能调色温，但断电后失效。  
