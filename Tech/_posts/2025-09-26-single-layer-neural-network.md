@@ -28,7 +28,7 @@ tags:
     The hyperplane separating classes in the input space. In a single-layer network, this boundary is always linear.
 
 ## Architecture of a Single-Layer Neural Network
-![single_layer_nn.png](https://images.zijianguo.com/single_layer_nn_binary.png){:width="80%"}
+![single_layer_nn_binary.png](https://images.zijianguo.com/single_layer_nn_binary.png)
    
    
   
