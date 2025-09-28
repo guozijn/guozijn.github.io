@@ -116,14 +116,30 @@ layout: default
     <aside class="home-sidebar">
       <h2 class="home-sidebar__title">Top Tags</h2>
       <ul class="home-sidebar__list">
-        {%- assign sorted_tags = site.tags | sort -%}
-        {%- for tag in sorted_tags -%}
+        {%- capture tag_counts -%}
+          {%- for tag in site.tags -%}
+            {%- assign tag_name = tag[0] -%}
+            {%- assign count = tag[1].size -%}
+            {%- assign inverse = 9999 | minus: count -%}
+            {%- capture padded_inverse -%}0000{{ inverse }}{%- endcapture -%}
+            {%- assign padded_inverse = padded_inverse | slice: -4, 4 -%}
+            {{ padded_inverse }}|{{ tag_name | downcase }}|{{ tag_name }}{% unless forloop.last %},{% endunless %}
+          {%- endfor -%}
+        {%- endcapture -%}
+        {%- assign sorted_tags = tag_counts | strip | split: ',' | sort -%}
+        {%- for tag_entry in sorted_tags -%}
+          {%- assign parts = tag_entry | split: '|' -%}
+          {%- assign inverse = parts[0] | plus: 0 -%}
+          {%- assign tag_name = parts[2] | default: parts[1] | strip -%}
+          {%- assign tag_count = 9999 | minus: inverse -%}
+          {%- if tag_name != '' -%}
           <li class="home-sidebar__item">
-            <a class="home-sidebar__link" href="{{ '/tags/' | relative_url }}#{{ tag[0] | slugify }}">
-              <span class="home-sidebar__tag">{{ tag[0] }}</span>
-              <span class="home-sidebar__count">{{ tag[1].size }}</span>
+            <a class="home-sidebar__link" href="{{ '/tags/' | relative_url }}#{{ tag_name | slugify }}">
+              <span class="home-sidebar__tag">{{ tag_name }}</span>
+              <span class="home-sidebar__count">{{ tag_count }}</span>
             </a>
           </li>
+          {%- endif -%}
         {%- endfor -%}
       </ul>
     </aside>
