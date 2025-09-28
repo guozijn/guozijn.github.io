@@ -29,6 +29,10 @@ theme: minima
 plugins:
   - jekyll-feed
 lang: en
+kramdown:
+  input: GFM
+  math_engine: mathjax
+  syntax_highlighter: rouge
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
@@ -46,3 +50,4 @@ lang: en
 disqus:
   shortname: guozijn
 home_posts_limit: 10
+cv_page: https://zijianguo.com

@@ -42,6 +42,13 @@ layout: default
         LinkedIn
       </a>
       {%- endif -%}
+
+      {%- if site.cv_page -%}
+      <a class="home-hero__link" href="{{ site.cv_page }}" target="_blank" rel="noopener">
+        <i class="fas fa-file-lines fa-lg"></i>
+        CV
+      </a>
+      {%- endif -%}
         </div>
       {%- endif -%}
     </section>
