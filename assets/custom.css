@@ -55,6 +55,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 p { color: var(--text-secondary); }
 
+.post-content ol,
+.post-content ul,
+.post-content li {
+  color: var(--text-secondary);
+}
+
+.post-content mjx-container[jax="CHTML"] {
+  color: var(--text-primary);
+}
+
 /* -------------------- Layout -------------------- */
 .wrapper {
   max-width: 1080px !important;
@@ -651,4 +661,3 @@ body.recognition-modal-open {
   color: #e0e7ff;
   box-shadow: 0 18px 36px -20px rgba(17, 24, 39, 0.75);
 }
-
