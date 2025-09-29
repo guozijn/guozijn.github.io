@@ -28,6 +28,8 @@ markdown: kramdown
 theme: minima
 plugins:
   - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
 lang: en
 kramdown:
   input: GFM
