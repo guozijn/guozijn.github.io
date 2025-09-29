@@ -270,7 +270,11 @@ p { color: var(--text-secondary); }
   font-weight: 500; border: 1px solid rgba(79, 70, 229, 0.18);
   transition: background 0.18s ease, color 0.18s ease;
 }
-.home-hero__link:hover, .home-hero__link:focus { background: var(--accent-strong); color: #ffffff; }
+.home-hero__link:hover,
+.home-hero__link:focus-visible {
+  background: var(--accent-strong);
+  color: #ffffff;
+}
 .home-hero__link svg { width: 18px; height: 18px; }
 
 .home-sidebar {
