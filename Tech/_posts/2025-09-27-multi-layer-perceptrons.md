@@ -151,7 +151,11 @@ tags:
 
 ## Implementation and Explanation  
 
+This section contrasts a from-scratch NumPy implementation with an equivalent PyTorch model. Both pipelines share the same data preprocessing, hyperparameters, and evaluation workflow so their learning curves can be compared directly.
+
 ### Custom Version
+
+The custom network is assembled from lightweight building blocks: `Linear`, `ReLU`, and `CrossEntropy`. Each layer stores the activations it needs for the backward pass, computes gradients manually, and updates its parameters via SGD in the `step` routine. Utility helpers handle one-hot encoding, mini-batch iteration, normalisation, and accuracy tracking so the training loop mirrors a framework-driven workflow while keeping every tensor transformation explicit.
 ```python
 import numpy as np
 
@@ -334,6 +338,8 @@ Custom test accuracy: 0.7980
 ```
 
 ### PyTorch Version
+
+The PyTorch variant recreates the same architecture with `nn.Sequential`, letting autograd handle gradient calculations. Dataset splits are wrapped in `TensorDataset`/`DataLoader`, giving shuffling and batching for free, and the training loop follows the standard `optimizer.zero_grad() → loss.backward() → optimizer.step()` pattern. Reusing the preprocessing from the custom section ensures any performance gains are attributable to the framework tooling rather than data differences.
 
 ```python
 import numpy as np
@@ -529,3 +535,7 @@ Epoch 50: train_loss=0.0002 train_acc=1.0000 val_loss=0.1212 val_acc=0.9736
 PyTorch validation accuracy: 0.9736, loss: 0.1212
 PyTorch test accuracy: 0.9707, loss: 0.1009
 ```
+
+#### Summary
+
+Side-by-side results highlight how much leverage a mature framework provides: the hand-written network converges slowly and tops out around 0.80 validation accuracy, while the PyTorch model with identical preprocessing reaches 0.97+ in only a few epochs thanks to optimised primitives and automatic differentiation. The NumPy baseline, however, remains valuable for building intuition about tensor shapes, gradient flow, and training dynamics before delegating the heavy lifting to PyTorch.
