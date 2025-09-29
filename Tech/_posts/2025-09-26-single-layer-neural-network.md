@@ -4,8 +4,7 @@ tags:
   - machine learning
   - neural network
 ---
-## Key Concepts  
-
+## Key Concepts
 - **Neuron (Perceptron)**  
   A neutron is the fundamental unit of the network. Each neuron computes a weighted sum of inputs plus a bias, then applies an activation function (e.g. step, sigmoid)
 

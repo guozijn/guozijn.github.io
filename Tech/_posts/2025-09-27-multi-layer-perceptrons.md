@@ -6,7 +6,6 @@ tags:
   - mlp
 ---
 ## Key Concepts
-
 - **Hidden Layers**  
   An MLP contains one or more hidden layers between the input and output.  
   Each hidden layer applies a linear transformation followed by a non-linear activation function:  
