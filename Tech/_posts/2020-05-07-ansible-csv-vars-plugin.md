@@ -4,6 +4,8 @@ tags:
   - ansible
   - devops
 ---
+When rolling out network configs I kept address assignments in spreadsheets because they are easy to edit. Translating those tables into Ansible host vars manually grew painful, so this plugin lets each CSV row feed host-specific variables automatically. During template rendering every device pulls its unique addresses from the sheet, keeping the workflow spreadsheet-friendly while delivering correct per-host values in playbooks.
+
 ## Requirements
 
 Parse data from CSV into host variables.
