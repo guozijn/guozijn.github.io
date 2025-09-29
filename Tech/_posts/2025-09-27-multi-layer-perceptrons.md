@@ -1,5 +1,5 @@
 ---
-title: Multi-Layer Perceptron neural networks
+title: Multi-Layer Perceptron Neural Networks
 tags:
   - machine learning
   - neural network
