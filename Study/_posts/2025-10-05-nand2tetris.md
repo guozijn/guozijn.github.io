@@ -21,6 +21,13 @@ B ----/
 
 Through these constructions, learners understand how simple gates combine to form complex logical circuits.
 
+### De Morgan’s Law
+
+$$
+\overline{AB} = \overline{A} + \overline{B}\\
+\overline{A + B} = \overline{A}\,\overline{B}
+$$
+
 ---
 
 ## Chapter 2: Boolean Arithmetic
