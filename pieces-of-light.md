@@ -1,8 +1,7 @@
 ---
 layout: page
-title: Recognitions
-permalink: /recognitions/
-description: My certificates, awards, and milestones.
+title: Pieces of Light
+permalink: /pieces-of-light/
 recognitions:
   - title: Calculus for Machine Learning and Data Science
     organization: DeepLearning.AI
@@ -31,7 +30,7 @@ recognitions:
 ---
 
 <div class="recognitions-intro">
-  <p>Here is a snapshot of the credentials and milestones I am proud of. Each one reflects a phase of learning or collaboration that shaped my journey. Click any card to explore in more detail.</p>
+  <p>Here’s a quick look at some credentials and moments, each marking a step of growth or collaboration along the way. Click any card to explore more.</p>
 </div>
 
 {% assign items = page.recognitions %}
