@@ -6,9 +6,13 @@ tags:
   - notes
 ---
 ## Boolean Logic
-### De Morgan’s Law  
+### De Morgan’s Law
+
 $$
-\overline{AB} = \overline{A} + \overline{B}\\
+\overline{AB} = \overline{A} + \overline{B}
+$$
+
+$$
 \overline{A + B} = \overline{A}\,\overline{B}
 $$
 
@@ -51,7 +55,10 @@ Example:
 **Formula**
 
 $$
-\text{Range} = [-2^{n-1},\, 2^{n-1} - 1]\\
+\text{Range} = [-2^{n-1},\, 2^{n-1} - 1]
+$$
+
+$$
 \text{Decimal} = -b_{n-1} \times 2^{n-1} + \sum_{i=0}^{n-2} b_i \times 2^i
 $$
 
@@ -179,14 +186,14 @@ The Hack assembly language contains two instruction types: **A-instruction** and
 
 ### A-instruction
 **Form**
-```asm
+```
 @value
 @symbol
 ```
 Loads a constant or address into the A register. The value also becomes the memory address for `M`.
 
 **Example**
-```asm
+```
 @10
 D=A
 @counter
@@ -197,7 +204,7 @@ M=0
 ![c-instructions.png](https://images.zijianguo.com/c-instructions.png)
 
 **Form**
-```asm
+```
 dest=comp;jump
 ```
 Performs computation and optionally stores or jumps.
@@ -207,7 +214,7 @@ Performs computation and optionally stores or jumps.
 - `jump`: condition (JGT, JEQ, JGE, JLT, JNE, JLE, JMP)
 
 **Example**
-```asm
+```
 D=M
 D;JGT
 0;JMP
@@ -224,7 +231,7 @@ D&A, D&M, D|A, D|M
 
 ### Labels and Symbols
 **Label Declaration**
-```asm
+```
 (LOOP)
 ```
 Marks a location. The label’s value is the address of the next instruction.
@@ -237,7 +244,7 @@ R0–R15, SP, LCL, ARG, THIS, THAT, SCREEN=16384, KBD=24576
 Variables (custom symbols) start from address 16.
 
 ### Example Program: Sum 1+2+...+n
-```asm
+```
 @i
 M=0
 @sum
@@ -405,6 +412,7 @@ M=D
 Jack source compiles to VM commands, VM maps to Hack assembly.
 
 ### Segment Mapping
+
 | Jack variable kind | VM segment | Notes |
 |---|---|---|
 | static | static | Per class file scope |
@@ -414,6 +422,7 @@ Jack source compiles to VM commands, VM maps to Hack assembly.
 | array base | this or local or argument | Depends on declaration |
 
 ### Subroutine Kinds
+
 | Jack subroutine | VM header | Entry actions |
 |---|---|---|
 | function | function ClassName.func k | No implicit this |
@@ -486,6 +495,7 @@ return
 ```
 
 ### Expressions, operators
+
 | Jack | VM expansion |
 |---|---|
 | - x | neg |
@@ -493,14 +503,21 @@ return
 | x + y | add |
 | x − y | sub |
 | x & y | and |
-| x | y | or |
+| x \| y | or |
 | x < y | lt |
 | x > y | gt |
 | x = y | eq |
 | x * y | call Math.multiply 2 |
 | x / y | call Math.divide 2 |
 
-g
+### Literals and keywords
+
+| Jack | VM |
+|---|---|
+| integer n | push constant n |
+| true | push constant 0, not |
+| false, null | push constant 0 |
+| this | push pointer 0 |
 
 ### String literal "abc"
 ```
@@ -516,6 +533,7 @@ call String.appendChar 2
 Length first, then append each code point.
 
 ### Calls, qualification
+
 | Jack form | VM call name | Arg0 rule |
 |---|---|---|
 | obj.m(a,b) | ClassName.m | push obj reference then a,b |
@@ -523,4 +541,4 @@ Length first, then append each code point.
 | m(a,b) inside a method | ClassName.m | push pointer 0 then a,b |
 
 ### Label policy
-Use per subroutine counters, labels must be unique per function, for example IF_TRUE$n, WHILE_END$n.
+Use per subroutine counters, labels must be unique per function, for example IF_TRUE, WHILE_END.
