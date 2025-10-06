@@ -329,25 +329,25 @@ A=A-1
 M=M+D
 ```
 
-**eq (boolean comparison)**
+**push constant 5**
+```
+@5
+D=A
+@SP
+AM=M+1
+A=A-1
+M=D
+```
+
+**pop local 2**
 ```
 @SP
 AM=M-1
 D=M
-A=A-1
-D=M-D
-@TRUE
-D;JEQ
-@SP
-A=M-1
-M=0
-@END
-0;JMP
-(TRUE)
-@SP
-A=M-1
-M=-1
-(END)
+@LOCAL
+A=A+1
+A=A+1
+M=D
 ```
 
 **push constant i**
@@ -375,6 +375,29 @@ D=M
 @R13
 A=M
 M=D
+```
+
+**eq (boolean comparison)**
+```
+@SP
+AM=M-1
+D=M
+@SP
+AM=M-1
+D=M-D
+@labelTrue
+D;JEQ
+D=0
+@labelFalse
+0;JMP
+(labelTrue)
+D=-1
+(labelFalse)
+@SP
+A=M
+M=D
+@SP
+M=M+1
 ```
 
 ### Bootstrap
