@@ -344,7 +344,7 @@ M=D
 @SP
 AM=M-1
 D=M
-@LOCAL
+@LCL
 A=A+1
 A=A+1
 M=D
