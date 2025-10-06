@@ -350,6 +350,17 @@ A=A+1
 M=D
 ```
 
+**pop argument 0**
+```
+@SP
+AM=M-1
+D=M
+@ARG
+@SP
+A=M
+M=D
+```
+
 **push constant i**
 ```
 @i
