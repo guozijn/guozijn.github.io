@@ -163,6 +163,15 @@ code {
   border-collapse: collapse;
   border-radius: 12px;
 }
+.highlight .rouge-gutter {
+  width: 3.5ch;
+  min-width: 3.5ch;
+  padding-right: 1ch;
+  text-align: right;
+}
+.highlight .rouge-gutter .lineno {
+  display: block;
+}
 .highlight, .highlight .w { color: #24292f; background-color: #f6f8fa; }
 .highlight .k, .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kt, .highlight .kv { color: #cf222e; }
 .highlight .gr { color: #f6f8fa; }
