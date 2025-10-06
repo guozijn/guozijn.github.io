@@ -345,7 +345,7 @@ M=D
 AM=M-1
 D=M
 @LCL
-A=A+1
+A=M+1
 A=A+1
 M=D
 ```
