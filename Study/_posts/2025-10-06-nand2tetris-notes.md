@@ -575,4 +575,4 @@ Length first, then append each code point.
 | m(a,b) inside a method | ClassName.m | push pointer 0 then a,b |
 
 ### Label policy
-Use per subroutine counters, labels must be unique per function, for example IF_TRUE, WHILE_END.
+Use per subroutine counters, labels must be unique per function, for example `IF_TRUE$n`, `WHILE_END$n`.
