@@ -169,6 +169,10 @@ code {
   padding-right: 1ch;
   text-align: right;
 }
+.highlight .rouge-code pre {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
 .highlight .rouge-gutter .lineno {
   display: block;
 }
