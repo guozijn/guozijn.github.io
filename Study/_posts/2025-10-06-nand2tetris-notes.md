@@ -304,6 +304,19 @@ AM=M-1
 D=M
 ```
 
+### Memory Segments
+
+| VM Segment | Meaning | Assembly Base | Address Computation | Example |
+|-------------|----------|----------------|---------------------|----------|
+| **argument** | Function arguments | `ARG` | `A = M + index` | `push argument 2` → `*(ARG + 2)` |
+| **local** | Local variables of the current function | `LCL` | `A = M + index` | `pop local 0` → `*(LCL + 0)` |
+| **this** | "this" pointer area | `THIS` | `A = M + index` | `push this 1` → `*(THIS + 1)` |
+| **that** | "that" pointer area | `THAT` | `A = M + index` | `pop that 2` → `*(THAT + 2)` |
+| **temp** | Temporary storage (RAM[5–12]) | `5` | `A = 5 + index` | `push temp 3` → `@8` |
+| **pointer** | Stores THIS and THAT pointers (RAM[3–4]) | `3` | `A = 3 + index` | `pop pointer 0` → `THIS = *(SP-1)` |
+| **static** | File-specific static variables | `16` | `@FileName.index` | `push static 2` → `@Foo.2` |
+| **constant** | Immediate values, not in RAM | — | `D = A` | `push constant 7` → `D = 7` |
+
 ### Basic Syntax of VM Language
 ```
 push constant i
