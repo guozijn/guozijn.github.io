@@ -237,9 +237,22 @@ D&A, D&M, D|A, D|M
 Marks a location. The label’s value is the address of the next instruction.
 
 **Predefined Symbols**
-```
-R0–R15, SP, LCL, ARG, THIS, THAT, SCREEN=16384, KBD=24576
-```
+
+| Symbol                      | Address | Meaning                                                           |
+| --------------------------- | ------- | ----------------------------------------------------------------- |
+| **SP**                      | `0`     | Stack pointer (top of the stack)                                  |
+| **LCL**                     | `1`     | Base address of the local segment                                 |
+| **ARG**                     | `2`     | Base address of the argument segment                              |
+| **THIS**                    | `3`     | Base address of the this segment                                  |
+| **THAT**                    | `4`     | Base address of the that segment                                  |
+| **R0–R15**                  | `0–15`  | General purpose registers, aliases for the first 16 RAM addresses |
+| **temp (R5–R12)**           | `5–12`  | Fixed temporary segment, used for intermediate storage            |
+| **pointer (THIS/THAT)**     | `3–4`   | Pointer segment that maps to `THIS` (0) and `THAT` (1)            |
+| **static (FileName.index)** | `16+`   | Static variables unique to each `.vm` file, starting from RAM[16] |
+| **SCREEN**                  | `16384` | Base address of the screen memory (for display pixels)            |
+| **KBD**                     | `24576` | Address of the keyboard memory-mapped register                    |
+
+
 
 Variables (custom symbols) start from address 16.
 
