@@ -356,7 +356,6 @@ M=D
 AM=M-1
 D=M
 @ARG
-@SP
 A=M
 M=D
 ```
