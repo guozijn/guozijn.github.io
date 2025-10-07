@@ -355,27 +355,6 @@ A=A-1
 M=M+D
 ```
 
-**push constant 5**
-```
-@5
-D=A
-@SP
-AM=M+1
-A=A-1
-M=D
-```
-
-**pop local 2**
-```
-@SP
-AM=M-1
-D=M
-@LCL
-A=M+1
-A=A+1
-M=D
-```
-
 **pop argument 0**
 ```
 @SP
@@ -391,10 +370,9 @@ M=D
 @i
 D=A
 @SP
-A=M
+AM=M+1
+A=A-1
 M=D
-@SP
-M=M+1
 ```
 
 **pop local i**
@@ -403,12 +381,12 @@ M=M+1
 D=A
 @LCL
 D=M+D
-@R13
+@5 // temp
 M=D
 @SP
 AM=M-1
 D=M
-@R13
+@5
 A=M
 M=D
 ```
