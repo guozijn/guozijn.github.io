@@ -287,8 +287,8 @@ M=0
 - Memory map: R0–R15, SCREEN(16384), KBD(24576)
 
 ### ASM Notes
-- First Pass: Scans the code to record label symbols and their ROM addresses in the symbol table.
-- Second Pass: Translates all instructions into binary code and assigns memory addresses to variables.
+- First pass: Strip whitespace/comments, walk instructions to build the label table; each non-label command bumps the ROM address counter, while `(LABEL)` entries alias the next instruction line.
+- Second pass: Revisit the cleaned instruction stream, resolve symbols (allocating RAM addresses from 16 upward for new variables), and emit the 16-bit Hack opcodes for every A- and C-instruction.
 
 ---
 
@@ -344,9 +344,151 @@ call f n
 return
 ```
 
-### Common Translations
+### Translations from VM language to Assembly
 
-**add**
+The C++ [`VMTranslator`](https://github.com/guozijn/compsys/blob/main/prac6/VMTranslator/VMTranslator.cpp) writes structured templates for every VM command. Values destined for the stack are staged in `D` and finalised with the shared push tail:
+
+```
+@SP
+AM=M+1
+A=A-1
+M=D
+```
+
+For `pop` commands targeting base-pointer segments, the absolute address is cached in `R13` before the stack value is stored. The assembler snippets below use placeholders such as `index` and `FunctionName` that the translator substitutes at runtime.
+
+#### push segment index
+
+- `push constant index`
+```
+@index
+D=A
+@SP
+AM=M+1
+A=A-1
+M=D
+```
+
+- `push local|argument|this|that index`
+```
+@index
+D=A
+@SEG            // SEG ∈ {LCL, ARG, THIS, THAT}
+A=M+D
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+```
+
+- `push pointer 0|1`
+```
+@THIS|THAT
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+```
+
+- `push temp index`
+```
+@index
+D=A
+@5
+A=D+A
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+```
+
+- `push static index`
+```
+@index
+D=A
+@16
+A=D+A
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+```
+
+#### pop segment index
+
+- `pop local|argument|this|that index`
+```
+@index
+D=A
+@SEG            // SEG ∈ {LCL, ARG, THIS, THAT}
+D=M+D
+@13
+M=D
+@SP
+AM=M-1
+D=M
+@13
+A=M
+M=D
+```
+
+- `pop pointer 0`
+```
+@SP
+AM=M-1
+D=M
+@THIS
+M=D
+```
+
+- `pop pointer 1`
+```
+@SP
+AM=M-1
+D=M
+@THAT
+M=D
+```
+
+- `pop temp index`
+```
+@index
+D=A
+@5
+D=D+A
+@13
+M=D
+@SP
+AM=M-1
+D=M
+@13
+A=M
+M=D
+```
+
+- `pop static index`
+```
+@index
+D=A
+@16
+D=D+A
+@13
+M=D
+@SP
+AM=M-1
+D=M
+@13
+A=M
+M=D
+```
+
+#### Arithmetic and logic
+
+`add`
 ```
 @SP
 AM=M-1
@@ -355,43 +497,51 @@ A=A-1
 M=M+D
 ```
 
-**pop argument 0**
+`sub`
 ```
 @SP
 AM=M-1
 D=M
-@ARG
-A=M
-M=D
-```
-
-**push constant i**
-```
-@i
-D=A
-@SP
-AM=M+1
 A=A-1
-M=D
+M=M-D
 ```
 
-**pop local i**
+`neg`
 ```
-@i
-D=A
-@LCL
-D=M+D
-@5 // temp
-M=D
+@SP
+A=M-1
+M=-M
+```
+
+`and`
+```
 @SP
 AM=M-1
 D=M
-@5
-A=M
-M=D
+A=A-1
+M=M&D
 ```
 
-**eq (boolean comparison)**
+`or`
+```
+@SP
+AM=M-1
+D=M
+A=A-1
+M=M|D
+```
+
+`not`
+```
+@SP
+A=M-1
+M=!M
+```
+
+#### Comparisons
+
+`eq`, `gt`, and `lt` share a helper that emits unique labels (`CMP_TRUE0`, `CMP_END0`, …). Example output for `eq`:
+
 ```
 @SP
 AM=M-1
@@ -399,30 +549,160 @@ D=M
 @SP
 AM=M-1
 D=M-D
-@labelTrue
+@CMP_TRUE0
 D;JEQ
 D=0
-@labelFalse
+@CMP_END0
 0;JMP
-(labelTrue)
+(CMP_TRUE0)
 D=-1
-(labelFalse)
+(CMP_END0)
 @SP
-A=M
+AM=M+1
+A=A-1
 M=D
-@SP
-M=M+1
 ```
 
-### Bootstrap
+`gt` substitutes `JGT` and `lt` uses `JLT` in the conditional jump.
+
+#### Branching commands
+
+- `label X`: `(X)`
+- `goto X`:
+  ```
+  @X
+  0;JMP
+  ```
+- `if-goto X`:
+  ```
+  @SP
+  AM=M-1
+  D=M
+  @X
+  D;JNE
+  ```
+
+#### Function commands
+
+`function FunctionName nLocals`
 ```
-@256
+(FunctionName)
+@nLocals
+D=A
+@13
+M=D
+(FunctionName$initLocalsLoop)
+@13
+D=M
+@FunctionName$initLocalsEnd
+D;JEQ
+@SP
+AM=M+1
+A=A-1
+M=0
+@13
+M=M-1
+@FunctionName$initLocalsLoop
+0;JMP
+(FunctionName$initLocalsEnd)
+```
+
+`call FunctionName nArgs`
+```
+@FunctionName$ret.0   // counter increments per call site
 D=A
 @SP
+AM=M+1
+A=A-1
 M=D
-@Sys.init
+@LCL
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+@ARG
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+@THIS
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+@THAT
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+@SP
+D=M
+@5
+D=D-A
+@nArgs
+D=D-A
+@ARG
+M=D
+@SP
+D=M
+@LCL
+M=D
+@FunctionName
 0;JMP
+(FunctionName$ret.0)
 ```
+
+`return`
+```
+@LCL
+D=M
+@13
+M=D              // frame = LCL
+@5
+A=D-A
+D=M
+@14
+M=D              // ret = *(frame-5)
+@SP
+AM=M-1
+D=M
+@ARG
+A=M
+M=D              // *ARG = pop()
+@ARG
+D=M+1
+@SP
+M=D              // SP = ARG + 1
+@13
+AM=M-1
+D=M
+@THAT
+M=D
+@13
+AM=M-1
+D=M
+@THIS
+M=D
+@13
+AM=M-1
+D=M
+@ARG
+M=D
+@13
+AM=M-1
+D=M
+@LCL
+M=D
+@14
+A=M
+0;JMP            // goto ret
+```
+
+`R13` and `R14` serve as the frame scratch space and cached return address.
 
 ### Program Control
 #### Subroutines & Functions
@@ -438,12 +718,83 @@ M=D
 ##### Return Implementation
 ![vm-return-command.png](https://images.zijianguo.com/vm-return-command.png)
 
+### Memory Architecture of the Hack Virtual Machine
+The Hack Virtual Machine is implemented on a stack-based architecture.
+All function calls, arguments, and local variables are stored in the RAM.
+The CPU executes instructions fetched from the ROM, while the stack resides in RAM starting at address 256.
+The following diagram summarises the relationship between ROM, RAM, and the stack pointer segments.
+
+```
+                    ┌──────────────────────────────────────────┐
+                    │                HACK CPU                  │
+                    │──────────────────────────────────────────│
+                    │  Registers:                              │
+                    │   A  → Address register                  │
+                    │   D  → Data register                     │
+                    │   PC → Program counter                   │
+                    │                                          │
+                    │  Control signals: use A/D/PC to access   │
+                    │  RAM or ROM                              │
+                    └──────────────────────────────────────────┘
+                                       │
+                                       │ (A register provides address)
+                                       ▼
+
+    ┌───────────────────────────────────────────┐
+    │                   ROM                     │
+    │───────────────────────────────────────────│
+    │ Stores machine code (.hack instructions)  │
+    │ Loaded from compiled .asm file            │
+    │ PC fetches sequentially                   │
+    │ Read-only memory                          │
+    └───────────────────────────────────────────┘
+                                       │
+                                       ▼
+    ┌───────────────────────────────────────────┐
+    │                   RAM                     │
+    │───────────────────────────────────────────│
+    │ Address range: 0 - 32767                  │
+    │                                           │
+    │ 0–15 : General-purpose registers          │
+    │   ├─ R0  = SP    (Stack Pointer)          │
+    │   ├─ R1  = LCL   (Local segment base)     │
+    │   ├─ R2  = ARG   (Argument segment base)  │
+    │   ├─ R3  = THIS  (This segment base)      │
+    │   ├─ R4  = THAT  (That segment base)      │
+    │   ├─ R5–R12 = Temp segment (8 slots)      │
+    │   ├─ R13–R15 = General temporary registers│
+    │                                           │
+    │ 16–255 : Static variables (per file)      │
+    │                                           │
+    │ 256–2047 : Stack segment                  │
+    │   ↑                                       │
+    │   │ push → write at stack top             │
+    │   │ pop  → remove from stack top          │
+    │   │ SP points to next free slot           │
+    │   │-------------------------------------- │
+    │   │  ← Stack base (256)                   │
+    │   │  [Return address]                     │
+    │   │  [Saved LCL, ARG, THIS, THAT]         │
+    │   │  [Local variables local 0..n]         │
+    │   │  [Working stack / evaluation values]  │
+    │   │-------------------------------------- │
+    │   ↓                                       │
+    │                                           │
+    │ 2048–16383 : Heap / arrays / objects      │
+    │                                           │
+    │ 16384–24575 : Screen memory map           │
+    │ 24576–32767 : Keyboard input              │
+    └───────────────────────────────────────────┘
+```
+
 ### VM Notes
 - The VM provides portability by hiding the Hack memory details.
 - SP management ensures correct push/pop order.
 - Always use unique labels for comparisons and calls.
+- ROM addresses are just sequential instruction numbers; label declarations don't consume addresses, they alias the next instruction's line number.
 - `call`: push return address and segment pointers, then jump to function.
 - `return`: restore caller frame, reposition `SP`, and jump back to return address.
+- No `constant` in pop operation.
 
 ## High-Level Language (Jack)
 Jack source compiles to VM commands, VM maps to Hack assembly.
