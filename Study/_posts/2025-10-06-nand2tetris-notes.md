@@ -1,5 +1,5 @@
 ---
-title: "Revisiting Nand2Tetris: Notes"
+title: "Building the Hack Computer: Study Notes"
 tags:
   - nand2tetris
   - computer system
