@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Pieces of Light
+title: Credentials
 permalink: /pieces-of-light/
 recognitions:
   - title: Calculus for Machine Learning and Data Science
