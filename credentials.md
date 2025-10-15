@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Credentials
-permalink: /pieces-of-light/
+permalink: /credentials/
 recognitions:
   - title: Calculus for Machine Learning and Data Science
     organization: DeepLearning.AI
