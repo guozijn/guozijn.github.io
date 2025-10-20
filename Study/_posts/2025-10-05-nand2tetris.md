@@ -25,6 +25,9 @@ Through these constructions, learners understand how simple gates combine to for
 
 $$
 \overline{AB} = \overline{A} + \overline{B}\\
+$$
+
+$$
 \overline{A + B} = \overline{A}\,\overline{B}
 $$
 

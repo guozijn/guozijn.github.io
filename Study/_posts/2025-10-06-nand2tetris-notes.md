@@ -930,3 +930,21 @@ Length first, then append each code point.
 
 ### Label policy
 Use per subroutine counters, labels must be unique per function, for example `IF_TRUE$n`, `WHILE_END$n`.
+
+### Code Generation
+
+#### Handling Objects
+
+![jack-handling-objects-1.png](https://images.zijianguo.com/jack-handling-objects-1.png)
+
+![jack-handling-objects-2.png](https://images.zijianguo.com/jack-handling-objects-2.png)
+
+#### Handling Arrays
+
+![jack-handling-arrays-1.png](https://images.zijianguo.com/jack-handling-arrays-1.png)
+
+![jack-handling-arrays-2.png](https://images.zijianguo.com/jack-handling-arrays-2.png)
+
+#### Example
+
+![jack-example.png](https://images.zijianguo.com/jack-example.png)
