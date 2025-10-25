@@ -22,6 +22,7 @@ github_username: guozijn
 linkedin_username: guozijn
 twitter_username:
 url: "https://guozijn.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+timezone: Australia/Adelaide
 
 # Build settings
 markdown: kramdown
