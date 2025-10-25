@@ -319,6 +319,9 @@ code {
   background: var(--accent);
   color: #ffffff;
 }
+.dark-mode .home-hero__title-text::after {
+  background: linear-gradient(90deg, rgba(129, 140, 248, 0.35), rgba(14, 165, 233, 0.15));
+}
 
 /* VSCode Dark+ Theme */
 /* -- highlight dark theme styles injected below -- */
@@ -593,7 +596,37 @@ code {
   color: var(--accent-strong);
   margin-bottom: 0.8rem;
 }
-.home-hero__title { font-size: clamp(2.1rem, 3vw, 2.8rem); margin: 0 0 1rem; }
+.home-hero__title {
+  margin: 0 0 1.2rem;
+  line-height: 1.05;
+}
+.home-hero__title-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: clamp(2.4rem, 3.8vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(115deg, #312e81, #4f46e5 40%, #0ea5e9 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  text-shadow: 0 16px 32px rgba(15, 23, 42, 0.15);
+  position: relative;
+  padding-right: 0.25rem;
+}
+.home-hero__title-text::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.4rem;
+  width: 62%;
+  height: 14px;
+  background: linear-gradient(90deg, rgba(79, 70, 229, 0.25), rgba(14, 165, 233, 0.08));
+  filter: blur(18px);
+  opacity: 0.9;
+  pointer-events: none;
+}
 .home-hero__subtitle { font-size: 1.05rem; max-width: 48ch; margin: 0; color: var(--text-secondary); }
 .home-hero__links { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 0.75rem; }
 .home-hero__link {

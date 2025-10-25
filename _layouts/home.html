@@ -13,7 +13,9 @@ layout: default
         <p class="home-hero__eyebrow">{{ hero_eyebrow }}</p>
       {%- endif -%}
       {%- if hero_title and hero_title != '' -%}
-        <h1 class="home-hero__title">{{ hero_title }}</h1>
+        <h1 class="home-hero__title">
+          <span class="home-hero__title-text">{{ hero_title }}</span>
+        </h1>
       {%- endif -%}
       {%- if hero_subtitle and hero_subtitle != '' -%}
         <p class="home-hero__subtitle">{{ hero_subtitle }}</p>
