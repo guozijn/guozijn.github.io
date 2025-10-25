@@ -10,7 +10,10 @@
     </div>
     <div class="site-footer__bottom" style="font-size: 0.92rem; color: #aaa; text-align: center; padding: 0.2rem 0 0.1rem;">
       <div style="margin-bottom: 0.3em; text-align: center; width: 100%;">
-        <button onclick="toggleDarkMode()" style="padding:0.22em 1em; border-radius:999px; border:none; background:#eee; color:#555555; font-size:0.95em; cursor:pointer; transition:background 0.18s;">🌙 Dark Mode</button>
+        <button class="dark-mode-toggle" type="button" onclick="toggleDarkMode()">
+          <span class="dark-mode-toggle__icon" aria-hidden="true">🌙</span>
+          <span class="dark-mode-toggle__label">Dark Mode</span>
+        </button>
       </div>
       <span>© {{ site.time | date: "%Y" }} {{ site.title }}</span>
     </div>

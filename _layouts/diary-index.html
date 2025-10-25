@@ -1,0 +1,102 @@
+---
+layout: default
+---
+
+{%- assign page_size = page.page_size | default: 10 -%}
+{%- assign sorted_entries = site.diary | sort: 'date' | reverse -%}
+{%- assign entry_count = sorted_entries | size -%}
+{%- assign show_pagination = entry_count > page_size -%}
+
+<section class="diaries">
+  <header class="diaries__header">
+    <p class="diaries__eyebrow">Notebook / Diary</p>
+    <h1 class="diaries__title">{{ page.title | default: "Diary" }}</h1>
+    {%- if page.description -%}
+      <p class="diaries__description">{{ page.description }}</p>
+    {%- endif -%}
+  </header>
+
+  {%- if sorted_entries.size == 0 -%}
+    <p class="diaries__empty">No diary entries yet &mdash; capture your first thought today.</p>
+  {%- else -%}
+    <div class="diaries__list" data-diary-list data-page-size="{{ page_size }}">
+      {%- for entry in sorted_entries -%}
+        <article class="log-entry" data-diary-index="{{ forloop.index0 }}">
+          <div class="log-entry__meta">
+            <time datetime="{{ entry.date | date_to_xmlschema }}">{{ entry.date | date: "%Y-%m-%d %H:%M:%S" }}</time>
+            {%- if entry.mood -%}
+              <span class="log-entry__mood">{{ entry.mood }}</span>
+            {%- endif -%}
+          </div>
+          <h2 class="log-entry__title">
+            {{ entry.title }}
+          </h2>
+          <div class="log-entry__content">
+            {{ entry.content | markdownify }}
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+
+    {%- if show_pagination -%}
+      <nav class="diaries__pagination" data-diary-pagination aria-label="Diary pagination">
+        <button type="button" class="diaries__pagination-btn" data-action="prev">Previous</button>
+        <span class="diaries__pagination-status">
+          Page <span data-page-current>1</span> of <span data-page-total>1</span>
+        </span>
+        <button type="button" class="diaries__pagination-btn" data-action="next">Next</button>
+      </nav>
+    {%- endif -%}
+  {%- endif -%}
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var list = document.querySelector('[data-diary-list]');
+    var pagination = document.querySelector('[data-diary-pagination]');
+    if (!list || !pagination) return;
+
+    var entries = Array.prototype.slice.call(list.querySelectorAll('.log-entry'));
+    var pageSize = parseInt(list.dataset.pageSize || '10', 10);
+    var totalPages = Math.max(1, Math.ceil(entries.length / pageSize));
+    var currentPage = 1;
+
+    var currentLabel = pagination.querySelector('[data-page-current]');
+    var totalLabel = pagination.querySelector('[data-page-total]');
+    var prevBtn = pagination.querySelector('[data-action="prev"]');
+    var nextBtn = pagination.querySelector('[data-action="next"]');
+
+    totalLabel.textContent = totalPages;
+
+    function renderPage() {
+      entries.forEach(function (entry, index) {
+        var start = (currentPage - 1) * pageSize;
+        var end = start + pageSize;
+        var visible = index >= start && index < end;
+        entry.style.display = visible ? '' : 'none';
+      });
+
+      currentLabel.textContent = currentPage;
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = currentPage === totalPages;
+    }
+
+    prevBtn.addEventListener('click', function () {
+      if (currentPage > 1) {
+        currentPage -= 1;
+        renderPage();
+        list.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+
+    nextBtn.addEventListener('click', function () {
+      if (currentPage < totalPages) {
+        currentPage += 1;
+        renderPage();
+        list.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+
+    renderPage();
+  });
+</script>

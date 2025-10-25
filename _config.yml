@@ -30,6 +30,15 @@ plugins:
   - jekyll-feed
   - jekyll-sitemap
   - jekyll-seo-tag
+collections:
+  diary:
+    output: false
+defaults:
+  - scope:
+      path: ""
+      type: diary
+    values:
+      author: Zijian
 lang: en
 kramdown:
   input: GFM
