@@ -3,5 +3,5 @@
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
 layout: home
-hero_title: Hi, Zijian is here 👋
+hero_title: "Hi, Zijian is here <span class='hero-emoji' role='img' aria-label='waving hand'>👋🏻</span>"
 ---

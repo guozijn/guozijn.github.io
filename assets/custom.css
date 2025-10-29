@@ -615,6 +615,15 @@ code {
   position: relative;
   padding-right: 0.25rem;
 }
+.home-hero__title-text .hero-emoji {
+  background: none;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: initial;
+  color: initial;
+  text-shadow: none;
+  display: inline-flex;
+  align-items: center;
+}
 .home-hero__title-text::after {
   content: "";
   position: absolute;
