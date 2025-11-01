@@ -1338,6 +1338,11 @@ body.recognition-modal-open {
     display: none !important;
   }
 
+  .page-content {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
   .wrapper {
     max-width: none !important;
     padding: 0 !important;
