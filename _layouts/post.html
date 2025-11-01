@@ -12,6 +12,12 @@ layout: default
   </div>
 </article>
 
+<div class="post-actions">
+  <button type="button" class="print-article-button" onclick="window.print()">
+    Print this article
+  </button>
+</div>
+
 {% if page.comments != false %}
   {% include disqus_comments.html %}
 {% endif %}

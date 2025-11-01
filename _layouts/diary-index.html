@@ -5,8 +5,6 @@ layout: default
 {%- assign page_size = page.page_size | default: 10 -%}
 {%- assign sorted_entries = site.diary | sort: 'date' | reverse -%}
 {%- assign entry_count = sorted_entries | size -%}
-{%- assign show_pagination = entry_count > page_size -%}
-
 <section class="diaries">
   <header class="diaries__header">
     <p class="diaries__eyebrow">Notebook / Diary</p>
@@ -38,7 +36,7 @@ layout: default
       {%- endfor -%}
     </div>
 
-    {%- if show_pagination -%}
+    {%- if entry_count > page_size -%}
       <nav class="diaries__pagination" data-diary-pagination aria-label="Diary pagination">
         <button type="button" class="diaries__pagination-btn" data-action="prev">Previous</button>
         <span class="diaries__pagination-status">
