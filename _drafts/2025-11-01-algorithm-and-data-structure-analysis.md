@@ -94,6 +94,17 @@ function Karatsuba(a, b, n):
     return p2 * B^(2k) + (p1 - p2 - p0) * B^k + p0
 ```
 
+A direct algebraic derivation makes the reuse of products explicit:
+
+$$
+\begin{aligned}
+    a \times b &= (a_1 B^k + a_0)(b_1 B^k + b_0) \\
+               &= a_1 b_1 B^{2k} + a_1 b_0 B^k + a_0 b_1 B^k + a_0 b_0 \\
+               &= (a_1 b_1) B^{2k} + (a_1 b_0 + a_0 b_1) B^k + a_0 b_0 \\
+               &= (a_1 b_1) B^{2k} + \big[(a_0 + a_1)(b_0 + b_1) - a_1 b_1 - a_0 b_0\big] B^k + a_0 b_0.
+\end{aligned}
+$$
+
 With $k = \lceil n/2 \rceil$, write $a = a_1 B^k + a_0$ and $b = b_1 B^k + b_0$. Then $ab = (a_1 b_1)B^{2k} + \big[(a_0 + a_1)(b_0 + b_1) - a_1 b_1 - a_0 b_0\big]B^k + a_0 b_0$,
 
 so only three multiplications: $a_0 b_0$, $a_1 b_1$, and $(a_0 + a_1)(b_0 + b_1)$ are required, alongside six additions/subtractions of at most $2n$-digit numbers.
@@ -165,7 +176,21 @@ Here `CountingSortByDigit` sorts by the $i$-th digit only and preserves previous
 | Radix | Non-comparison | $\Theta(d (n + B))$ | $\Theta(d (n + B))$ | $\Theta(d (n + B))$ | $\Theta(n + B)$ | Yes |
 | Bucket | Non-comparison | $\Theta(n)$ | $\Theta(n)$ | $\Theta(n^2)$ | $\Theta(n)$ | Yes |
 
-## 5. Order Statistics
+## 5. Data Structure Cheat Sheet
+
+> Hash tables assume load factor $\alpha = n/m$.
+
+| Structure | Insert (avg) | Insert (worst) | Delete (avg) | Delete (worst) | Find (avg) | Find (worst) | Space | Notes |
+|-----------|--------------|----------------|--------------|----------------|------------|--------------|-------|-------|
+| Array (unsorted) | $\Theta(1)$ (append) | $\Theta(n)$ (resize) | $\Theta(n)$ | $\Theta(n)$ | $\Theta(n)$ | $\Theta(n)$ | $\Theta(n)$ | Swap-with-last deletion avoids extra shift |
+| Array (sorted) | $\Theta(n)$ | $\Theta(n)$ | $\Theta(n)$ | $\Theta(n)$ | $\Theta(\log n)$ | $\Theta(\log n)$ | $\Theta(n)$ | Binary search but expensive updates |
+| Hash table (chaining) | $\Theta(1)$ | $\Theta(1)$ | $\Theta(1 + \alpha)$ | $\Theta(n)$ | $\Theta(1 + \alpha)$ | $\Theta(n)$ | $\Theta(n + m)$ | Insert prepends to bucket list |
+| Hash table (linear probing) | $\Theta(1)$ | $\Theta(n)$ | $\Theta(1 + \alpha)$ | $\Theta(n)$ | $\Theta(1 + \alpha)$ | $\Theta(n)$ | $\Theta(m)$ | Primary clustering when $\alpha$ is large |
+| Binary search tree (random inserts) | $\Theta(\log n)$ | $\Theta(n)$ | $\Theta(\log n)$ | $\Theta(n)$ | $\Theta(\log n)$ | $\Theta(n)$ | $\Theta(n)$ | Height $\approx O(\log n)$ in expectation |
+| Balanced BST (AVL / Red-Black) | $\Theta(\log n)$ | $\Theta(\log n)$ | $\Theta(\log n)$ | $\Theta(\log n)$ | $\Theta(\log n)$ | $\Theta(\log n)$ | $\Theta(n)$ | Rotations maintain balance |
+| Linked list (head pointer) | $\Theta(1)$ | $\Theta(1)$ | $\Theta(n)$ | $\Theta(n)$ | $\Theta(n)$ | $\Theta(n)$ | $\Theta(n)$ | Sequential search required |
+
+## 6. Order Statistics
 
 ### Selection Problem
 
@@ -188,6 +213,31 @@ function RandomizedSelect(A, p, r, i):
     return RandomizedSelect(A, q + 1, r, i - k)
 ```
 
+#### Expected-Time Recurrence Derivation
+
+Let $T(n)$ denote the expected running time on an $n$-element input and suppose $T(n) \le cn$ for sufficiently large $c$. The standard recurrence is
+
+$$
+T(n) \le \frac{2}{n} \sum_{k=n/2}^{n-1} T(k) + \Theta(n),
+$$
+
+where the summation captures the two symmetric cases in which the recursive call stays within the larger half of the array. Applying the inductive hypothesis step by step:
+
+$$
+\begin{aligned}
+T(n) &\le \frac{2}{n} \sum_{k=n/2}^{n-1} T(k) + \Theta(n) && \text{recurrence} \\
+&\le \frac{2}{n} \sum_{k=n/2}^{n-1} c k + \Theta(n) && \text{substitute } T(k) \le ck \\
+&= \frac{2c}{n} \left(\sum_{k=1}^{n-1} k - \sum_{k=1}^{n/2-1} k\right) + \Theta(n) && \text{split the sum} \\
+&= \frac{2c}{n} \left(\frac{1}{2}(n-1)n - \frac{1}{2}\left(\frac{n}{2}-1\right)\frac{n}{2}\right) + \Theta(n) && \text{expand the arithmetic series} \\
+&= c(n-1) - \frac{c}{2}\left(\frac{n}{2}-1\right) + \Theta(n) && \text{multiply out} \\
+&= cn - c - \frac{cn}{4} + \frac{c}{2} + \Theta(n) && \text{collect terms} \\
+&= cn - \left(\frac{cn}{4} + \frac{c}{2} - \Theta(n)\right) && \text{rearrange} \\
+&\le cn && \text{choose $c$ large enough.}
+\end{aligned}
+$$
+
+Thus the inductive hypothesis is preserved, completing the proof that the expected running time satisfies $T(n) = O(n)$.
+
 Here $A[p..r]$ denotes the active subarray; $p$ and $r$ mark its inclusive bounds, and $i$ (1-indexed) is the desired order statistic within that subarray.
 
 Expected complexity is $\Theta(n)$ with $\Theta(1)$ auxiliary space when the partition is performed in-place, though the worst case remains $\Theta(n^2)$ if pivot choices are consistently poor.
@@ -196,7 +246,7 @@ Expected complexity is $\Theta(n)$ with $\Theta(1)$ auxiliary space when the par
 
 The median-of-medians algorithm chooses pivots deterministically to guarantee $\Theta(n)$ worst-case time by grouping elements, selecting medians recursively, and partitioning around that pivot.
 
-## 6. Hashing
+## 7. Hashing
 
 * **Chaining:** Insert in linked list — average $O(1)$, worst $O(n)$
 * **Linear Probing:** $h'(k) = (h(k) + i) \bmod m$
@@ -231,36 +281,14 @@ HashSearchLinearProbing(T, key):
     return null
 ```
 
-Hash table with chaining:
+See the **Data Structure Cheat Sheet** for a consolidated summary of average and worst-case costs.
 
-| Operation | Worst Case | Average Case |
-| --------- | ---------- | ------------ |
-| Insert    | $O(1)$     | $O(1)$       |
-| Remove    | $\Theta(n)$ | $O(1 + \alpha)$ |
-| Find      | $\Theta(n)$ | $O(1 + \alpha)$ |
-
-Hash table with linear probing:
-
-| Operation | Worst Case | Average Case |
-| --------- | ---------- | ------------ |
-| Insert    | $\Theta(n)$ | $O(1)$       |
-| Remove    | $\Theta(n)$ | $O(1 + \alpha)$ |
-| Find      | $\Theta(n)$ | $O(1 + \alpha)$ |
-
-Worst case analysis of data structures:
-
-| Data Structure | Insert     | Remove     | Find      |
-| -------------- | ---------- | ---------- | --------- |
-| Array          | $O(n)$     | $O(n)$     | $O(1)$    |
-| Linked List    | $O(1)$     | $O(1)$     | $\Theta(n)$ |
-| AVL Tree       | $O(\log n)$ | $O(\log n)$ | $O(\log n)$ |
-
-## 7. Skip Lists
+## 8. Skip Lists
 
 * Expected height of an element: $H = 1/p$, typically $p = 1/2$
 * Expected search/insert/delete: $O(\log n)$
 
-## 8. Binary Search Trees
+## 9. Binary Search Trees
 
 * **Properties:**
 
@@ -273,6 +301,7 @@ Worst case analysis of data structures:
 
   * Balanced BST: $h = O(\log n)$
   * Unbalanced BST: $h = O(n)$
+  * See **Data Structure Cheat Sheet** for best/average/worst-case runtime comparison.
 
 ### Core Operations
 
@@ -311,17 +340,86 @@ Delete(node, key):
     return node
 ```
 
-### Example Tree
+### Traversal Orders (Examples)
+
+Below, each node is annotated with the visitation index for the corresponding traversal.
+
+**In-order** (Left → Root → Right) yields a sorted sequence.
 
 ```text
-        8
-      /   \
-     3    10
-    / \     \
-   1   6     14
-      / \    /
-     4   7  13
+        8(6)
+      /     \
+   3(2)     10(7)
+  /   \        \
+1(1) 6(4)     14(9)
+    /   \     /
+  4(3) 7(5) 13(8)
 ```
+
+Visit order: `1, 3, 4, 6, 7, 8, 10, 13, 14`
+
+**Pre-order** (Root → Left → Right) is helpful for serialising the tree.
+
+```text
+        8(1)
+      /     \
+   3(2)     10(7)
+  /   \        \
+1(3) 6(4)     14(8)
+    /   \     /
+  4(5) 7(6) 13(9)
+```
+
+Visit order: `8, 3, 1, 6, 4, 7, 10, 14, 13`
+
+**Post-order** (Left → Right → Root) is convenient for deleting/freeing nodes.
+
+```text
+        8(9)
+      /     \
+   3(5)     10(8)
+  /   \        \
+1(1) 6(4)     14(7)
+    /   \     /
+  4(2) 7(3) 13(6)
+```
+
+Visit order: `1, 4, 7, 6, 3, 13, 14, 10, 8`
+
+### Average Successful Search in a Perfectly Balanced BST
+
+**Assumptions**
+
+- Tree $T$ is perfectly balanced with height $k-1$.
+- The number of keys is $n = 2^k - 1$ (i.e. every level is full).
+
+**Observation**
+
+- Depth $i$ contains exactly $2^i$ nodes for $0 \le i \le k-1$.
+- A successful search for a node at depth $i$ performs $i + 1$ comparisons.
+
+Therefore the average number of comparisons over all nodes is
+
+$$
+\begin{aligned}
+\bar{T}(n)
+  &= \frac{1}{n} \sum_{i=0}^{k-1} (i+1) 2^i \\
+  &= \frac{1}{n} \left(\sum_{i=0}^{k-1} i 2^i + \sum_{i=0}^{k-1} 2^i\right) \\
+  &= \frac{1}{n} \left((k-2)2^k + 2 + (2^k - 1)\right) \\
+  &= \frac{1}{n} \left((k-1)2^k + 1\right) \\
+  &= \left(1 + \frac{1}{n}\right)\log_2(n + 1) - 1,
+\end{aligned}
+$$
+
+where we substitute $2^k = n + 1$ and $\log_2(n + 1) = k$ in the last step.
+
+> **Theorem.** In a perfectly balanced binary search tree with $n = 2^k - 1$ elements, the average time to find a uniformly random key is $\left(1 + \tfrac{1}{n}\right)\log_2(n + 1) - 1 = k - 1 + \tfrac{k}{n}$ comparisons.
+
+> **Theorem (Random Insertion).** If $n$ distinct keys are inserted into a BST in uniformly random order, the expected cost of a successful search in the resulting tree is
+> $$
+> (2 \ln 2)\,\log_2 n - O(1) \approx 1.386 \,\log_2 n,
+> $$
+> i.e. the tree remains logarithmic in expectation with a small constant factor.
 
 ### Runtime Summary
 
@@ -331,7 +429,7 @@ For search, insert, and delete on a BST with height $h$:
 * **Average case:** $\Theta(\log n)$ — random insertions keep the tree nearly balanced
 * **Worst case:** $\Theta(n)$ — degenerate (e.g., sorted input) tree with $h = n - 1$
 
-## 9. AVL Trees
+## 10. AVL Trees
 
 * **Balance Factor:** $BF = height(left) - height(right)$, rebalancing keeps $BF \in \{-1,0,1\}$ for every node.
 * **Rotations:**
@@ -525,14 +623,14 @@ After right rotation on 40:         After left rotation on 20:
 
 Each node’s balance factor stays within $[-1,1]$, and rotations repair any violations after insertions or deletions.
 
-## 10. Graph Representations
+## 11. Graph Representations
 
 | Representation   | Space    | Description   |
 | ---------------- | -------- | ------------- |
 | Adjacency Matrix | $O(n^2)$ | Dense graphs  |
 | Adjacency List   | $O(n+m)$ | Sparse graphs |
 
-## 11. Graph Traversal Algorithms
+## 12. Graph Traversal Algorithms
 
 ### Depth-First Search (DFS)
 
@@ -582,7 +680,24 @@ BFS(G, s):
 
 * For unweighted graphs → shortest path
 
-## 12. Shortest Path Algorithms
+### Traversal Complexity Quick Reference
+
+Let $n = \|V\|$ denote the number of vertices and $m = \|E\|$ the number of edges.
+
+| Algorithm | Time (Adjacency List) | Time (Adjacency Matrix) | Extra Space | Notes |
+|-----------|-----------------------|-------------------------|-------------|-------|
+| Depth-first search (DFS) | $\Theta(n + m)$ | $\Theta(n^2)$ | $\Theta(n)$ for recursion stack | Explores as deep as possible before backtracking |
+| Breadth-first search (BFS) | $\Theta(n + m)$ | $\Theta(n^2)$ | $\Theta(n)$ for frontier queue | Reveals shortest paths in unweighted graphs |
+
+## 13. Shortest Path Algorithms
+
+| Algorithm | Graph Type | Time Complexity | Extra Space | Notes |
+|-----------|------------|-----------------|-------------|-------|
+| Dijkstra (binary heap) | Weighted, $w \ge 0$ | $O((n + m)\log n)$ | $\Theta(n)$ | Use Fibonacci heap for $O(m + n\log n)$ |
+| Bellman–Ford | Weighted, allows $w < 0$ | $O(n m)$ | $\Theta(n)$ | Detects negative cycles reachable from $s$ |
+| Floyd–Warshall | All-pairs, weighted | $O(n^3)$ | $\Theta(n^2)$ | Dynamic programming; handles negative edges (no neg. cycles) |
+| Prim (binary heap) | Undirected, weighted | $O((n + m)\log n)$ | $\Theta(n)$ | Minimum spanning tree |
+| Kruskal | Undirected, weighted | $O(m \log n)$ | $\Theta(n)$ for DSU | Sort edges; needs disjoint-set union |
 
 ### Dijkstra’s Algorithm
 
@@ -623,6 +738,7 @@ The updated key 5 is pushed (or decreased) in Q.
 ```
 
 * **Complexity:** $O((V + E)\log V)$ using priority queue
+* **Graph type:** Directed or undirected weighted graphs with non-negative edges
 * **Cannot handle negative edges**
 
 ### Bellman-Ford Algorithm
@@ -651,6 +767,8 @@ markNegativeCycle(v):
         for each edge (v, w) ∈ G.E:
             markNegativeCycle(w)
 ```
+
+* **Graph type:** Directed weighted graphs (negative edges allowed, no reachable negative cycles after detection)
 
 ### Floyd-Warshall Algorithm
 
@@ -682,6 +800,7 @@ C [ 3, ∞,  0 ]
 Output dist matrix gives all-pairs shortest paths.
 ```
 
+* **Graph type:** Directed weighted graphs (supports negative edges provided no negative cycles)
 * **Complexity:** $O(\|V\|^3)$
 * Solves the all-pairs shortest-path problem on weighted directed graphs, handling negative edge weights as long as there is no negative cycle.
 * Works with negative edges but not negative cycles
@@ -696,7 +815,7 @@ Output dist matrix gives all-pairs shortest paths.
 | BFS | Search | Explore layer by layer; breadth gives unweighted shortest paths |
 | DFS | Search | Dive deeply along a branch, backtrack to explore unseen edges |
 
-## 13. Minimum Spanning Trees (MST)
+## 14. Minimum Spanning Trees (MST)
 
 ### Key Properties
 
@@ -758,7 +877,7 @@ Kruskal(G):
 - Kruskal instead sorts all edges globally and keeps adding the lightest edge that connects two different components, relying on Union-Find to avoid cycles, which leads to $O(E \log E)$ complexity.
 - Prim fits dense graphs or adjacency-matrix setups (fewer edge weight comparisons), whereas Kruskal shines with sparse graphs where the edge sort dominates the work.
 
-## 12. Disjoint Set Union (Union-Find)
+### Disjoint Set Union (Union-Find)
 
 * **Operations:**
 
@@ -792,11 +911,25 @@ class UnionFind(n):
             Link(ri, rj)
 ```
 
-## 13. P, NP, and NP-Completeness
+## 15. Turing Machines and the Halting Problem
 
-* **P:** Problems solvable in polynomial time
-* **NP:** Problems verifiable in polynomial time
-* **NP-Complete:** In NP and as hard as any in NP
+- A **Turing machine (TM)** is the classical mathematical model of computation: a finite control, an infinite tape storing symbols, and a head that reads/writes while moving left or right. Algorithms can be formalised as TMs so we can reason about what problems are solvable in principle.
+- The **Halting Problem** asks: given a program $P$ (or TM) and an input $x$, will $P$ eventually halt on $x$ or run forever?
+- Assume, for contradiction, there exists a decider $H(P, x)$ that always halts and returns `"halts"` if $P$ halts on $x$, and `"loops"` otherwise.
+- Construct a new program $D$ that uses $H$:
+  - On input program $Q$, call $H(Q, Q)$.
+  - If $H$ says `"halts"`, then $D$ enters an infinite loop; otherwise $D$ halts immediately.
+- Now consider running $D$ on itself, i.e. $D(D)$:
+  - If $H(D, D)$ says `"halts"`, then by definition $D$ will loop forever — contradicting the prediction.
+  - If $H(D, D)$ says `"loops"`, then $D$ halts immediately — again contradicting the prediction.
+- This contradiction implies that $H$ cannot exist. Therefore, **the halting problem is undecidable**: no algorithm can solve it for all programs and inputs.
+
+## 16. P and NP Problems
+
+* **P:** Problems solvable in polynomial time by a deterministic TM.
+* **NP:** Problems verifiable in polynomial time (i.e. solutions can be checked efficiently).
+* **NP-Complete:** Problems in NP that are as hard as any other problem in NP (every NP problem poly-time reduces to them).
+* **NP-Hard:** Problems at least as hard as the hardest problems in NP; they need not lie in NP (verification may be super-polynomial or undecidable). If any NP-hard problem were solved in polynomial time, all NP problems would be as well.
 
 | Problem | Category | Notes |
 |---------|----------|-------|
@@ -812,7 +945,7 @@ class UnionFind(n):
 
 **MST is in P:** solvable by Kruskal or Prim in polynomial time.
 
-## 14. Typical Exam Problem Types
+## 17. Typical Exam Problem Types
 
 1. **True/False** — complexity and correctness
 2. **Induction proofs** — summations, correctness of algorithms
@@ -824,7 +957,7 @@ class UnionFind(n):
 8. **MST construction** — find all MSTs or use Prim/Kruskal
 9. **P vs NP conceptual** — definitions, examples, classification
 
-## 15. Key Formulae Summary
+## 18. Key Formulae Summary
 
 * **Geometric Sum:** $1 + r + r^2 + ... + r^n = \frac{r^{n+1} - 1}{r - 1}$
 * **Induction Base and Step Example:**

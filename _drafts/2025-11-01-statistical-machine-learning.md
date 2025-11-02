@@ -57,6 +57,40 @@ tags:
 - Convexity check: Hessian $\succeq 0$; Jensen’s inequality for expectations.
 - Gradient descent update: $w \leftarrow w - \eta \nabla L$; ensure step size respects Lipschitz constant.
 
+## Formula Table (based on SML Slides)
+
+| Topic | Formula | Notes |
+| - | - | - |
+| Summation–Product Identity | $\sum_{i=1}^M \sum_{j=1}^N a_i b_j = \Big(\sum_{i=1}^M a_i\Big)\Big(\sum_{j=1}^N b_j\Big)$ | From "Summation and Product" slide; shows double sum factorisation. |
+| Matrix–Vector Product | $Ab = [a_1^{\top} b, \dots, a_n^{\top} b]^{\top}$ | Treat rows $a_i^{\top}$ of $A$ as vectors whose dot-products with $b$ form the result. |
+| Diagonal Scaling | $A\Lambda = [a_1,\dots,a_n] \operatorname{diag}(\lambda_1,\dots,\lambda_n) = [\lambda_1 a_1,\dots,\lambda_n a_n]$ | Scaling each column vector $a_i$ by its associated eigenvalue. |
+| Inner Product | $\langle x, y \rangle = x^{\top} y = \sum_i x_i y_i$ | Definition of vector inner product. |
+| Vector Norms | $\|x\|_2 = \sqrt{\sum_i x_i^2}$<br>$\|x\|_1 = \sum_i \|x_i\|$<br>$\|x\|_p = \big(\sum_i \|x_i\|^p\big)^{1/p}$ | Common norms listed on "Inner product and norms" slide. |
+| Trace Basics | $\operatorname{Tr}(A) = \sum_i a_{ii}$, $\operatorname{Tr}(a) = a$ | Definition for square matrices and scalars. |
+| Trace Identities | $\operatorname{Tr}(X^{\top} Y) = \operatorname{Tr}(XY^{\top}) = \operatorname{Tr}(Y^{\top} X) = \operatorname{Tr}(YX^{\top})$ | Cyclic invariance of the trace used in slides. |
+| Frobenius Norm | $\lVert A\rVert_F=\sqrt{\sum_{i,j}a_{ij}^{2}}=\sqrt{\operatorname{Tr}!\big(AA^{\top}\big)}=\sqrt{\operatorname{Tr}!\big(A^{\top}A\big)}$ | Connects Frobenius norm to the trace operator. |
+| Linear Subspace | $\mathcal{S} = \{ x \mid x = t_1 v_1 + t_2 v_2 + \cdots + t_k v_k \}$ | All linear combinations of basis vectors span the subspace. |
+| Orthogonal Basis | $\langle v_i, v_j \rangle = 0,~ \forall i \neq j$ | Condition for orthogonality in the basis set. |
+| Eigenvalue Equation | $Au = \lambda u$ | Defines eigenpairs $(\lambda, u)$ of matrix $A$. |
+| Eigen Decomposition | $A = Q\Lambda Q^{-1}$<br>Symmetric case: $A = Q \Lambda Q^{\top}$, $Q^{\top} Q = QQ^{\top} = I$ | Factorisations highlighted in "Matrix decomposition" slide. |
+| Polynomial Kernel | $K(x,x') = (c + x^{\top} x')^d$<br>$d=2:~K(x,x') = \sum_i (x_i^2)(x_i'^2) + \sum_{i>j} (\sqrt{2} x_i x_j)(\sqrt{2} x_i' x_j') + \sum_i (\sqrt{2c} x_i)(\sqrt{2c} x_i') + c^2$ | Expansion shows explicit feature map for quadratic kernel. |
+| Euclidean & Mahalanobis Distance | $d_2(a,b) = \|a-b\|_2$<br>$d_M(a,b) = \sqrt{(a-b)^{\top} M (a-b)}$ | Distances used on "Distance measurement" slide. |
+| Expectation & Variance | $\mathbb{E}[X] = \sum_x x\,p(x)$ or $\int x f(x)\,dx$<br>$\operatorname{Var}[X] = \mathbb{E}[X^2] - (\mathbb{E}[X])^2$ | Basics from expectation/variance slides. |
+| Covariance Matrix | $\Sigma = \frac{1}{n}\sum_{i=1}^n (x_i - \mu)(x_i - \mu)^{\top}$ | Appears in covariance discussion for latent variable / EM sections. |
+| Bayes Rule | $p(y\mid x) = \frac{p(x\mid y) p(y)}{p(x)}$ | Derived in Bayesian classification slide. |
+| Linear Regression (Normal Equation) | $\hat{w} = \arg\min_w \sum_{i=1}^N (w^{\top} x_i - y_i)^2 = (X^{\top} X)^{-1} X^{\top} y$ | Closed-form solution from regression section. |
+| Ridge Regression | $\mathcal{L}(w) = \sum_{i=1}^N (w^{\top} x_i - y_i)^2 + \lambda \|w\|_2^2$<br>$\hat{w} = (X^{\top} X + \lambda I)^{-1} X^{\top} y$ | Regularised regression objective and solution. |
+| P-Norm Illustration | $\lVert x\rVert_{0}=\lvert{i:x_{i}\neq0}\rvert,\quad \lVert x\rVert_{1}=\sum_{i}\lvert x_{i}\rvert,\quad \lVert x\rVert_{2}=\big(\sum_{i}x_{i}^{2}\big)^{1/2},\quad \lVert x\rVert_{\infty}=\max_{i}\lvert x_{i}\rvert$ | Highlights how different $p$ values shape the norm. |
+| Gaussian Mixture Model | $p(x) = \sum_{k=1}^K \pi_k \mathcal{N}(x \mid \mu_k, \Sigma_k)$ | Likelihood decomposition used by EM. |
+| EM Responsibilities | $\gamma_{ik} = \frac{\pi_k \mathcal{N}(x_i \mid \mu_k, \Sigma_k)}{\sum_{j=1}^K \pi_j \mathcal{N}(x_i \mid \mu_j, \Sigma_j)}$ | E-step posterior of latent component. |
+| Log-Likelihood for EM | $\mathcal{L}(\theta) = \sum_{i=1}^N \log \sum_{k=1}^K \pi_k \mathcal{N}(x_i \mid \mu_k, \Sigma_k)$ | Objective maximised in EM algorithm. |
+| K-Means Objective | $\min_{\{c_i\},\{\mu_k\}} \sum_{i=1}^N \|x_i - \mu_{c_i}\|_2^2$ | Shown on K-means slides. |
+| MDP Return & Value | $R_{t}=\sum_{k=0}^{\infty}\gamma^{k}r_{t+k},\quad V^{\pi}(s)=\mathbb{E}{\pi}[R{t}\mid s_{t}=s],\quad Q^{\pi}(s,a)=\mathbb{E}{\pi}[R{t}\mid s_{t}=s,a_{t}=a]$ | Definitions from reinforcement learning module. |
+| Bellman Expectation | $V^\pi(s) = \sum_a \pi(a\mid s) \sum_{s'} P(s'\mid s,a) [r(s,a) + \gamma V^\pi(s')]$ | Policy evaluation equation. |
+| Bellman Optimality | $V^{}(s)=\max_{a}\sum_{s'}P(s'\mid s,a),[r(s,a)+\gamma V^{}(s')],\quad Q^{}(s,a)=r(s,a)+\gamma\sum_{s'}P(s'\mid s,a)\max_{a'}Q^{}(s',a')$ | Optimal value function recursions. |
+| Policy Improvement | $\pi'(s) = \arg\max_a \sum_{s'} P(s'\mid s,a)[r(s,a) + \gamma V^\pi(s')]$ | Step in policy iteration slides. |
+| Q-Learning Update | $Q(s_t,a_t) \leftarrow Q(s_t,a_t) + \alpha \big[r_t + \gamma \max_{a'} Q(s_{t+1}, a') - Q(s_t,a_t)\big]$ | Incremental update rule from RL section. |
+
 ### Key Properties & Exam Hooks
 - Symmetric matrices admit orthonormal eigenbases; positive-definite $\Rightarrow$ convex quadratic forms—useful for proving optimisation objectives are convex.
 - SVD guarantees rank-revealing factorisation even for rectangular matrices; singular values non-negative and sorted.
