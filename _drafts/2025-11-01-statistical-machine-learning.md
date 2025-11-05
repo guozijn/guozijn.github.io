@@ -90,6 +90,7 @@ tags:
 | Bellman Optimality | $V^{}(s)=\max_{a}\sum_{s'}P(s'\mid s,a),[r(s,a)+\gamma V^{}(s')],\quad Q^{}(s,a)=r(s,a)+\gamma\sum_{s'}P(s'\mid s,a)\max_{a'}Q^{}(s',a')$ | Optimal value function recursions. |
 | Policy Improvement | $\pi'(s) = \arg\max_a \sum_{s'} P(s'\mid s,a)[r(s,a) + \gamma V^\pi(s')]$ | Step in policy iteration slides. |
 | Q-Learning Update | $Q(s_t,a_t) \leftarrow Q(s_t,a_t) + \alpha \big[r_t + \gamma \max_{a'} Q(s_{t+1}, a') - Q(s_t,a_t)\big]$ | Incremental update rule from RL section. |
+{: .formula-table }
 
 ### Key Properties & Exam Hooks
 - Symmetric matrices admit orthonormal eigenbases; positive-definite $\Rightarrow$ convex quadratic forms—useful for proving optimisation objectives are convex.
@@ -132,7 +133,7 @@ tags:
 - Soft-margin introduces slack $\xi_i$ with penalty $C \sum_i \xi_i$.
 
 ### Dual Formulation & KKT
-- Lagrangian $L = \tfrac{1}{2} \lVert w \rVert^2 - \sum_i \alpha_i [y_i (w^{\top} x_i + b) - 1]$; stationarity gives $w = \sum_i \alpha_i y_i x_i$.
+- Lagrangian $\mathcal{L} = \tfrac{1}{2} \lVert w \rVert^2 - \sum_i \alpha_i [y_i (w^{\top} x_i + b) - 1]$; stationarity gives $w = \sum_i \alpha_i y_i x_i$.
 - Dual problem: maximize $\sum_i \alpha_i - \tfrac{1}{2} \sum_i \sum_j \alpha_i \alpha_j y_i y_j (x_i^{\top} x_j)$ subject to $0 \le \alpha_i \le C$ and $\sum_i \alpha_i y_i = 0$.
 - KKT conditions: complementary slackness $\alpha_i [y_i (w^{\top} x_i + b) - 1] = 0$ guides support vector identification.
 
@@ -222,7 +223,7 @@ tags:
 | Tanh | $\tanh(z)$ | $1 - \tanh^2(z)$ | $(-1, 1)$ | Zero-centred variant of sigmoid; still saturates; common in RNN hidden states. |
 | ReLU | $\max(0, z)$ | $\mathbf{1}_{z > 0}$ | $[0, \infty)$ | Sparse activations, efficient; risk of “dead ReLU” when $z < 0$ persistently. |
 | Leaky ReLU / PReLU | $\max(\alpha z, z)$ | $\alpha$ (for $z \le 0$), $1$ otherwise | $(-\infty, \infty)$ | Mitigates dead neurons; $\alpha$ fixed (Leaky) or learned (PReLU). |
-| ELU | $\begin{cases}z & z > 0 \\ \alpha(e^{z} - 1) & z \le 0\end{cases}$ | $\begin{cases}1 & z > 0 \\ \alpha e^{z} & z \le 0\end{cases}$ | $(-\alpha, \infty)$ | Smooth negative region; improves mean activation close to zero. |
+| ELU | $$\displaystyle\left\{\begin{array}{ll} z & \text{if } z > 0 \\ \alpha\big(e^{z} - 1\big) & \text{if } z \le 0 \end{array}\right.$$ | $$\displaystyle\left\{\begin{array}{ll} 1 & \text{if } z > 0 \\ \alpha e^{z} & \text{if } z \le 0 \end{array}\right.$$ | $(-\alpha, \infty)$ | Smooth negative region; improves mean activation close to zero. |
 | GELU | $\tfrac{1}{2} z \left(1 + \operatorname{erf}\left(\tfrac{z}{\sqrt{2}}\right)\right)$ | $\tfrac{1}{2}\left(1 + \operatorname{erf}\left(\tfrac{z}{\sqrt{2}}\right)\right) + \tfrac{z}{\sqrt{2\pi}} e^{-z^2/2}$ | $(-\infty, \infty)$ | Used in Transformers; stochastic interpretation; smooth bump near zero. |
 | Softplus | $\log(1 + e^{z})$ | $\frac{1}{1 + e^{-z}}$ | $(0, \infty)$ | Smooth ReLU; useful when differentiability needed. |
 | Softmax (vector) | $\frac{e^{z_i}}{\sum_j e^{z_j}}$ | $\sigma_i(\delta_{ij} - \sigma_j)$ | $(0, 1)$ per class | Converts logits to class probabilities; gradient couples outputs. |
@@ -361,6 +362,11 @@ tags:
 - Zero-shot classification via text prompts.
 - Evaluate with recall@K, mean reciprocal rank; check image-text alignment qualitatively.
 
+### Diffusion-Based Generators (Stable Diffusion)
+- Latent diffusion splits work: CLIP text encoder supplies conditioning tokens; U-Net denoiser iteratively refines noisy latent codes; VAE decoder maps final latent back to pixel space.
+- Training mimics denoising score matching: forward process adds Gaussian noise; model learns to predict noise $\epsilon_\theta(z_t, t, c)$; classifier-free guidance blends conditional/unconditional predictions to steer samples.
+- Exam-ready pipeline summary: prompt $\rightarrow$ tokenizer/encoder $\rightarrow$ scheduler of timesteps (DDIM, PNDM) $\rightarrow$ guided denoising loop $\rightarrow$ VAE decode; CFG scale tunes fidelity vs diversity, larger scales risk washed-out compositions.
+
 ### Key Properties & Exam Hooks
 - Contrastive losses enforce symmetric alignment: temperature $\tau$ controls softness of softmax; lower $\tau$ sharpens distribution.
 - Dual-encoder inference efficient (cosine similarity lookup); encoder–decoder better for generation but heavier.
@@ -405,3 +411,159 @@ tags:
 - Calculate self-attention scores for 2-token example; show how scaling affects softmax.
 - Compute one Q-learning update and REINFORCE gradient estimate.
 - Draw a simple DAG with collider and show effect of conditioning.
+
+## Exam-Style Example Problems
+### Assignment 1
+#### Problem 1 – Inner Product Identities
+**Question:** Let $u \in \mathbb{R}^d$ and $z_i \in \mathbb{R}^d$ for $i = 1, \ldots, n$. Which expressions are equivalent to $u^\top \sum_i z_i$?
+- $\sum_i \operatorname{Tr}(z_i u^\top)$
+- $\sum_i \langle u, z_i \rangle$
+- $\sum_i z_i^\top u$
+- $(\sum_i z_i) u$
+
+**Answer:** $\sum_i \operatorname{Tr}(z_i u^\top)$, $\sum_i \langle u, z_i \rangle$, and $\sum_i z_i^\top u$ all equal $u^\top \sum_i z_i$; $(\sum_i z_i)u$ is not equivalent in $\mathbb{R}^d$.
+**Derivation:** Using trace-cyclic invariance, $\operatorname{Tr}(z_i u^\top) = \operatorname{Tr}(u^\top z_i) = u^\top z_i$; inner product and transpose forms are identical scalars, so summing preserves equality. The expression $(\sum_i z_i)u$ attempts to multiply two $d$-vectors without a transpose, yielding an outer product; it therefore does not reduce to the desired scalar.
+
+#### Problem 2 – Mean Scatter vs Pairwise Scatter
+**Question:** Let $\{x_i\}$ be $d$-dimensional vectors with average $\mu = \tfrac{1}{N} \sum_i x_i$. Define $m_1 = \tfrac{1}{N} \sum_i \|\mu - x_i\|_2^2$ and $m_2 = \tfrac{1}{N^2} \sum_i \sum_j \|x_j - x_i\|_2^2$. What is the relationship between $m_1$ and $m_2$?
+- $m_1 = m_2$
+- $2 m_1 = m_2$
+- $4 m_1 = m_2$
+- $m_1 = 2 m_2$
+
+**Answer:** $2 m_1 = m_2$.
+**Derivation:** Let $\mu = \tfrac{1}{N} \sum_i x_i$ and expand
+$$\sum_{i,j} \|x_j - x_i\|_2^2 = \sum_{i,j} (\|x_j\|_2^2 + \|x_i\|_2^2 - 2 x_i^\top x_j) = 2N \sum_i \|x_i - \mu\|_2^2.$$
+Divide by $N^2$ to obtain $m_2 = \tfrac{1}{N^2} \sum_{i,j} \|x_j - x_i\|_2^2 = \tfrac{2}{N} \sum_i \|x_i - \mu\|_2^2 = 2 m_1$.
+
+#### Problem 3 – Diagonalising $XX^\top$
+**Question:** Let $X \in \mathbb{R}^{d \times d}$ and $P \in \mathbb{R}^{d \times d}$. Assume each row of $P$ is an independent eigenvector of $XX^\top$. What kind of matrix is $P XX^\top P^\top$?
+- Identity Matrix
+- Diagonal Matrix
+- Zero Matrix
+- Scalar
+
+**Answer:** $P XX^\top P^\top$ is diagonal.
+**Derivation:** Let $p_k^\top$ denote the $k$-th row of $P$. By assumption $p_k^\top XX^\top = \lambda_k p_k^\top$ and the eigenvectors are orthonormal, so $p_k p_\ell^\top = 0$ when $k \ne \ell$. The $(k,\ell)$ entry of $P XX^\top P^\top$ is $p_k^\top XX^\top p_\ell = \lambda_\ell p_k^\top p_\ell$, which is zero for $k \ne \ell$ and $\lambda_k$ on the diagonal. Hence the product yields the diagonal matrix of eigenvalues.
+
+#### Problem 4 – Epigraph Reformulation of $\max$
+**Question:** Which optimisation problem is equivalent to
+$$\min_w \|w\|_2^2 + \sum_i \max(5,\, 2 - w^\top x_i)\, ?$$
+- $\min_w \|w\|_2^2 + \sum_i \xi_i$ subject to $w^\top x_i \ge 1 - \xi_i$, $\xi_i \ge 0$
+- $\min_w \|w\|_2^2 + \sum_i \xi_i$ subject to $w^\top x_i \ge 1 - \xi_i$, $\xi_i \le 5$
+- $\min_w \|w\|_2^2 + \sum_i \xi_i$ subject to $w^\top x_i \ge 1 - \xi_i$, $\xi_i \ge 5$
+- $\min_w \|w\|_2^2 + \sum_i \xi_i$ subject to $w^\top x_i \ge 2 - \xi_i$, $\xi_i \ge 5$
+
+**Answer:** Introduce slack variables via the epigraph to obtain
+$$\min_{w, \{\xi_i\}} \|w\|_2^2 + \sum_i \xi_i \quad \text{s.t.} \quad \xi_i \ge 5,\; \xi_i \ge 2 - w^\top x_i, \; \forall i.$$
+**Derivation:** For any scalar functions $f_i(w)$ we can rewrite $\max(a, f_i(w))$ as the optimal value of $\min_{\xi_i} \xi_i$ subject to $\xi_i \ge a$ and $\xi_i \ge f_i(w)$. Applying this epigraph construction with $a=5$ and $f_i(w)=2 - w^\top x_i$ reproduces each hinge term inside the sum.
+
+#### Problem 5 – Ridge Regression vs Constrained Form
+**Question:** Which optimisation is equivalent to minimising the regularised loss $\min_v \|A v - b\|_2^2 + \alpha \|v\|_2^2$ for $A \in \mathbb{R}^{m \times n}$, $v \in \mathbb{R}^n$, $b \in \mathbb{R}^m$?
+- $\min_v \|A v - b\|_2^2$ subject to $\|v\|_2 \ge \sqrt{\alpha}$
+- $\min_v \|A v - b\|_2^2 + \tfrac{\alpha}{2} \|v\|_2^2$
+- $\min_v \|A v - b\|_2^2$ subject to $\|v\|_2 \le \sqrt{\alpha}$
+- $\min_v \|A v - b\|_2^2 + \alpha \|v\|_1$
+
+**Answer:** Equivalent to $\min_v \|A v - b\|_2^2$ subject to $\|v\|_2 \le \sqrt{\alpha}$.
+**Derivation:** The Lagrangian of the constrained problem $\mathcal{L}(v, \lambda) = \|A v - b\|_2^2 + \lambda (\|v\|_2^2 - \alpha)$ has stationary condition $\nabla_v \mathcal{L} = 2 A^\top (A v - b) + 2 \lambda v = 0$. Identifying $\lambda$ with the regularisation weight shows the solution satisfies $\nabla_v (\|A v - b\|_2^2 + \lambda \|v\|_2^2) = 0$. Choosing $\lambda = \alpha$ yields the penalised ridge objective, and complementary slackness enforces $\|v\|_2 \le \sqrt{\alpha}$ at optimum.
+
+### Assignment 2
+#### Question 1 – Two-Layer Network Backprop with Cross-Entropy
+**Question:** Provide the forward and backward pass derivations for a 2-layer neural network using cross-entropy loss.
+
+**Answer:** With input $x \in \mathbb{R}^d$, one-hot target $y \in \mathbb{R}^K$, hidden width $H$, weights $W_1 \in \mathbb{R}^{H \times d}$, $W_2 \in \mathbb{R}^{K \times H}$, biases $b_1 \in \mathbb{R}^H$, $b_2 \in \mathbb{R}^K$, and activation $\phi$ on the hidden layer:
+- Forward pass: $z_1 = W_1 x + b_1$, $h = \phi(z_1)$, $z_2 = W_2 h + b_2$, $\hat y = \operatorname{softmax}(z_2)$, $L = -\sum_{k=1}^K y_k \log \hat y_k$.
+- Backward pass: $\delta_2 = \hat y - y$, $\frac{\partial L}{\partial W_2} = \delta_2 h^\top$, $\frac{\partial L}{\partial b_2} = \delta_2$, $\delta_1 = (W_2^\top \delta_2) \odot \phi'(z_1)$, $\frac{\partial L}{\partial W_1} = \delta_1 x^\top$, $\frac{\partial L}{\partial b_1} = \delta_1$.
+
+**Derivation:**  
+1. **Forward definitions:** $z_1 = W_1 x + b_1$ is the pre-activation hidden vector; $h = \phi(z_1)$ applies an elementwise nonlinearity (e.g. ReLU with $\phi'(z)=\mathbb{1}[z>0]$). The second layer produces $z_2 = W_2 h + b_2$, and the softmax gives $\hat y_k = \exp(z_{2k}) / \sum_{j=1}^K \exp(z_{2j})$. Cross-entropy loss is $L = -\sum_k y_k \log \hat y_k$.
+2. **Output layer gradient:** The Jacobian identity for softmax-cross-entropy yields $\partial L / \partial z_{2k} = \hat y_k - y_k$; stacking components gives $\delta_2 \in \mathbb{R}^K$. Matrix calculus provides $\partial L / \partial W_2 = \delta_2 h^\top$ and $\partial L / \partial b_2 = \delta_2$.
+3. **Hidden layer gradient:** Propagate through the linear map and activation: $\delta_1 = (W_2^\top \delta_2) \odot \phi'(z_1)$, where $\odot$ denotes the Hadamard product. Gradients follow as $\partial L / \partial W_1 = \delta_1 x^\top$ and $\partial L / \partial b_1 = \delta_1$.
+4. **Batch updates:** For a mini-batch average each gradient, then update parameters with learning rate $\eta$: $W_\ell \leftarrow W_\ell - \eta \,\partial L/\partial W_\ell$, $b_\ell \leftarrow b_\ell - \eta \,\partial L/\partial b_\ell$ for layers $\ell \in \{1,2\}$.
+
+#### Question 2 – Hard-Margin SVM Dual from Primal
+**Question:** Derive the dual form of the hard-margin SVM starting from its primal optimisation.
+
+**Answer:** The primal $\min_{w,b} \tfrac{1}{2}\|w\|_2^2$ subject to $y_i(w^\top x_i + b) \ge 1$ yields the dual
+$$
+\max_{\alpha \in \mathbb{R}^N} \sum_{i=1}^N \alpha_i - \tfrac{1}{2} \sum_{i=1}^N \sum_{j=1}^N \alpha_i \alpha_j y_i y_j x_i^\top x_j
+$$
+with constraints $\alpha_i \ge 0$ and $\sum_i \alpha_i y_i = 0$. The optimal separator satisfies $w^\star = \sum_i \alpha_i^\star y_i x_i$; recover $b^\star$ from any support vector via $b^\star = y_k - (w^\star)^\top x_k$ for $0 < \alpha_k^\star$.
+
+**Derivation:**  
+1. **Lagrangian:** Introduce multipliers $\alpha_i \ge 0$ for each margin constraint, forming
+$$\mathcal{L}(w,b,\alpha) = \tfrac{1}{2}\|w\|_2^2 - \sum_{i=1}^N \alpha_i \big[y_i(w^\top x_i + b) - 1\big].$$
+2. **Stationarity:** Setting derivatives to zero gives $w = \sum_i \alpha_i y_i x_i$ and $\sum_i \alpha_i y_i = 0$.
+3. **Dual objective:** Substitute these expressions back into $\mathcal{L}$ to obtain
+$$g(\alpha) = \sum_{i=1}^N \alpha_i - \tfrac{1}{2} \sum_{i=1}^N \sum_{j=1}^N \alpha_i \alpha_j y_i y_j x_i^\top x_j.$$
+4. **KKT conditions:** Complementary slackness $\alpha_i [y_i(w^\top x_i + b) - 1] = 0$ identifies support vectors and ensures only points on the margin retain non-zero $\alpha_i$.
+5. **Solution recovery:** Maximising $g(\alpha)$ under $\alpha_i \ge 0$ and $\sum_i \alpha_i y_i = 0$ delivers $\alpha^\star$ and, consequently, $w^\star$ and $b^\star$.
+
+#### Question 3 – Soft-Margin SVM Dual with Slack Penalties
+**Question:** Derive the dual of the $\ell_2$-regularised soft-margin SVM, whose primal is
+$$
+\min_{w,b,\xi} \frac{1}{2}\|w\|_2^2 + C \sum_{i=1}^N \xi_i
+\quad \text{s.t.} \quad y_i (w^\top x_i + b) \ge 1 - \xi_i,\; \xi_i \ge 0.
+$$
+
+**Answer:** The dual maximisation problem is
+
+$$
+\max_{\alpha} \sum_{i=1}^N \alpha_i - \frac{1}{2} \sum_{i=1}^N \sum_{j=1}^N \alpha_i \alpha_j y_i y_j x_i^\top x_j
+$$
+
+subject to $0 \le \alpha_i \le C$ and $\sum_{i=1}^N \alpha_i y_i = 0$. At optimum $w^\star = \sum_i \alpha_i^\star y_i x_i$ and any index with $0<\alpha_i^\star<C$ satisfies $b^\star = y_i - (w^\star)^\top x_i$.
+
+**Derivation:**  
+1. **Primal Lagrangian:** Introduce multipliers $\alpha_i \ge 0$ for the margin constraints and $\mu_i \ge 0$ for the non-negativity of $\xi_i$:
+
+   $$
+   \mathcal{L}(w,b,\xi,\alpha,\mu) = \tfrac{1}{2}\|w\|_2^2 + C\sum_i \xi_i
+   - \sum_i \alpha_i \big[y_i(w^\top x_i + b) - 1 + \xi_i\big]
+   - \sum_i \mu_i \xi_i.
+   $$
+
+1. **Stationarity:**  
+   - $\partial \mathcal{L}/\partial w = 0 \Rightarrow w = \sum_i \alpha_i y_i x_i$.
+   - $\partial \mathcal{L}/\partial b = 0 \Rightarrow \sum_i \alpha_i y_i = 0$.
+   - $\partial \mathcal{L}/\partial \xi_i = 0 \Rightarrow C - \alpha_i - \mu_i = 0$.
+1. **Bounding multipliers:** Since $\mu_i \ge 0$, the last relation enforces $0 \le \alpha_i \le C$.
+1. **Dual objective:** Substitute the stationary expressions into $\mathcal{L}$, eliminate $\mu_i$ using $\mu_i = C - \alpha_i$, and simplify to obtain
+$$
+g(\alpha) = \sum_i \alpha_i - \tfrac{1}{2}\sum_{i,j} \alpha_i \alpha_j y_i y_j x_i^\top x_j.
+$$
+1. **KKT conditions:** Complementary slackness provides the usual support-vector structure: $\alpha_i [y_i(w^\top x_i + b) - 1 + \xi_i]=0$ and $(C - \alpha_i)\xi_i = 0$. Indices with $0 < \alpha_i < C$ lie exactly on the soft margin and supply $b^\star$.
+
+#### Question 4 – Ridge Regression Closed-Form Solution
+**Question:** Given training inputs $X \in \mathbb{R}^{N \times d}$, targets $y \in \mathbb{R}^N$, and ridge penalty $\lambda > 0$, derive the closed-form minimiser of
+$$
+J(w) = \|Xw - y\|_2^2 + \lambda \|w\|_2^2.
+$$
+
+**Answer:** Setting the gradient to zero yields $(X^\top X + \lambda I_d) w^\star = X^\top y$, so the ridge estimator is
+$$
+w^\star = (X^\top X + \lambda I_d)^{-1} X^\top y.
+$$
+If the design matrix includes a bias column of ones, omit that column from regularisation by augmenting the penalty with a selector matrix that leaves the bias coefficient unpenalised.
+
+**Derivation:**  
+1. Expand $J(w)$ in matrix form: $J(w) = (Xw - y)^\top (Xw - y) + \lambda w^\top w$.
+2. Differentiate: $\nabla_w J = 2 X^\top (Xw - y) + 2 \lambda w$.
+3. Set $\nabla_w J = 0$ to obtain the normal equation $(X^\top X + \lambda I_d) w = X^\top y$.
+4. Because $\lambda > 0$ ensures $X^\top X + \lambda I_d$ is positive definite (hence invertible), solving gives $w^\star$ above.
+5. When excluding the intercept from shrinkage, replace $\lambda I_d$ with $\lambda D$ for diagonal $D$ whose entries are $1$ for slope coefficients and $0$ for the intercept; the derivation proceeds identically.
+
+#### Question 6 – Implementing L2 Weight Decay Without Penalising Bias
+**Question:** Modify the training loop so each update applies L2 regularisation (weight decay) to model parameters. Explain how to implement it and why biases are exempt.
+
+**Answer:** Introduce a hyperparameter $\lambda_{\text{wd}}$ and apply for every weight tensor $W$ the update
+$$W \leftarrow W - \eta \left(\nabla_W L + \lambda_{\text{wd}} W\right),$$
+while biases keep the plain gradient step $b \leftarrow b - \eta \nabla_b L$. Use the same $\lambda_{\text{wd}}$ across steps so the shrinkage is consistent throughout training.
+
+**Derivation:** Adding $$\frac{\lambda_{\text{wd}}}{2}\sum_\ell \|W_\ell\|_2^2$$ to the loss differentiates to $$\nabla_{W_\ell} L + \lambda_{\text{wd}} W_\ell$$, giving the weight-decay term in the update. Bias vectors are omitted because they merely translate activations; penalising them would shift optimal intercepts and can introduce systematic error without controlling model capacity. Moreover, weight decay combats exploding weights that amplify inputs, an effect that biases do not share. This is why standard implementations regularise weights but not biases.
+
+#### Question 7 – Hyperparameter Tuning and Test-Set Discipline
+**Question:** Why is hyperparameter tuning crucial, and why must the test set remain untouched during tuning?
+
+**Answer:** Hyperparameters govern optimisation and model capacity. Oversized learning rates destabilise training; undersized rates slow convergence. Small batches increase gradient noise and exploration, large batches smooth updates but can settle in sharp minima. Hidden size, depth, and regularisation strengths dictate the bias–variance balance: too little capacity underfits; too much capacity overfits unless regularised. Tuning on a validation set searches this space for the configuration that maximises generalisation. The test set must stay unused during tuning to avoid leakage: incorporating it would bias decisions toward that data, yielding over-optimistic estimates. Reserve the test set for a single, final evaluation after hyperparameters are fixed.

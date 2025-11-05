@@ -1316,7 +1316,7 @@ body.recognition-modal-open {
 
 @page {
   size: A4 portrait;
-  margin: 20mm;
+  margin: 10mm 15mm;
 }
 
 @media print {
@@ -1346,6 +1346,7 @@ body.recognition-modal-open {
   .wrapper {
     max-width: none !important;
     padding: 0 !important;
+    margin: 0 !important;
   }
 
   .post {
@@ -1367,5 +1368,66 @@ body.recognition-modal-open {
   .post-content a {
     color: #000000 !important;
     text-decoration: underline;
+  }
+
+  .post-content table {
+    width: 100% !important;
+    table-layout: auto !important;
+    display: table !important;
+    overflow: visible !important;
+    border-collapse: collapse !important;
+  }
+
+  .post-content table th,
+  .post-content table td {
+    white-space: normal !important;
+    overflow: visible !important;
+    word-break: break-word;
+    padding: 0.4rem 0.5rem !important;
+  }
+
+  .post-content table mjx-container {
+    display: inline-block !important;
+    max-width: none !important;
+    overflow: visible !important;
+    white-space: nowrap !important;
+    text-align: left !important;
+  }
+
+  .post-content table mjx-math {
+    white-space: nowrap !important;
+  }
+
+  .post-content table.formula-table mjx-container {
+    display: block !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .post-content table.formula-table mjx-math {
+    white-space: normal !important;
+  }
+
+  .post-content table.formula-table {
+    table-layout: auto !important;
+  }
+
+  .post-content table.formula-table th:nth-child(1),
+  .post-content table.formula-table td:nth-child(1) {
+    width: 18% !important;
+  }
+
+  .post-content table.formula-table th:nth-child(2),
+  .post-content table.formula-table td:nth-child(2) {
+    width: 48% !important;
+    word-break: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .post-content table.formula-table th:nth-child(3),
+  .post-content table.formula-table td:nth-child(3) {
+    width: 34% !important;
   }
 }
