@@ -137,6 +137,63 @@ tags:
 - Dual problem: maximize $\sum_i \alpha_i - \tfrac{1}{2} \sum_i \sum_j \alpha_i \alpha_j y_i y_j (x_i^{\top} x_j)$ subject to $0 \le \alpha_i \le C$ and $\sum_i \alpha_i y_i = 0$.
 - KKT conditions: complementary slackness $\alpha_i [y_i (w^{\top} x_i + b) - 1] = 0$ guides support vector identification.
 
+#### Hard-Margin Derivation Walkthrough
+1. Start from the separable primal:
+   $$
+   \min_{w, b}\; \tfrac{1}{2}\lVert w \rVert^2 \quad \text{s.t.}\quad y_i (w^{\top} x_i + b) \ge 1.
+   $$
+   Introduce Lagrange multipliers $\alpha_i \ge 0$ for each constraint.
+2. Form the Lagrangian
+   $$
+   \mathcal{L}(w, b, \alpha) = \tfrac{1}{2}\lVert w \rVert^2 - \sum_i \alpha_i \big[y_i (w^{\top} x_i + b) - 1\big].
+   $$
+   Rearranging highlights the linear dependence on $w$ and $b$.
+3. Enforce stationarity (set partial derivatives to zero):
+   $$
+   \frac{\partial \mathcal{L}}{\partial w} = w - \sum_i \alpha_i y_i x_i = 0 \Rightarrow w = \sum_i \alpha_i y_i x_i,
+   $$
+   $$
+   \frac{\partial \mathcal{L}}{\partial b} = - \sum_i \alpha_i y_i = 0 \Rightarrow \sum_i \alpha_i y_i = 0.
+   $$
+4. Substitute $w$ back into $\mathcal{L}$ to eliminate primal variables:
+   $$
+   \mathcal{L}(\alpha) = \sum_i \alpha_i - \tfrac{1}{2} \sum_i \sum_j \alpha_i \alpha_j y_i y_j (x_i^{\top} x_j),
+   $$
+   which depends only on the multipliers; constraints collapse to $\alpha_i \ge 0$ and $\sum_i \alpha_i y_i = 0$.
+5. Read off the dual: maximise $\mathcal{L}(\alpha)$ under those constraints. Complementary slackness
+   $$
+   \alpha_i \big[y_i (w^{\top} x_i + b) - 1\big] = 0
+   $$
+   identifies support vectors: only points exactly on the margin ($y_i (w^{\top} x_i + b) = 1$) can have $\alpha_i > 0$.
+
+#### Soft-Margin Extension
+1. Introduce slack variables to absorb violations:
+   $$
+   \min_{w, b, \xi}\; \tfrac{1}{2}\lVert w \rVert^2 + C \sum_i \xi_i \quad \text{s.t.}\quad y_i (w^{\top} x_i + b) \ge 1 - \xi_i,\; \xi_i \ge 0.
+   $$
+   Two constraint families require multipliers: $\alpha_i \ge 0$ for the margin and $\mu_i \ge 0$ for $\xi_i \ge 0$.
+2. Lagrangian now includes both sets:
+   $$
+   \mathcal{L}(w, b, \xi, \alpha, \mu) = \tfrac{1}{2}\lVert w \rVert^2 + C \sum_i \xi_i - \sum_i \alpha_i\big[y_i(w^{\top}x_i + b) - 1 + \xi_i\big] - \sum_i \mu_i \xi_i.
+   $$
+3. Stationarity gives familiar structure plus a new upper bound:
+   $$
+   \frac{\partial \mathcal{L}}{\partial w} = 0 \Rightarrow w = \sum_i \alpha_i y_i x_i,\qquad \frac{\partial \mathcal{L}}{\partial b} = 0 \Rightarrow \sum_i \alpha_i y_i = 0,
+   $$
+   $$
+   \frac{\partial \mathcal{L}}{\partial \xi_i} = 0 \Rightarrow C - \alpha_i - \mu_i = 0.
+   $$
+   The last line implies $0 \le \alpha_i \le C$ because $\mu_i \ge 0$.
+4. Eliminating $w$, $b$, $\xi$ leaves the dual objective identical in form to hard margin but with the new box constraints:
+   $$
+   \max_{\alpha}\; \sum_i \alpha_i - \tfrac{1}{2} \sum_i \sum_j \alpha_i \alpha_j y_i y_j (x_i^{\top} x_j) \quad \text{s.t.}\quad 0 \le \alpha_i \le C,\; \sum_i \alpha_i y_i = 0.
+   $$
+5. Complementary slackness splits cases:
+   $$
+   \alpha_i\big[y_i(w^{\top}x_i + b) - 1 + \xi_i\big] = 0, \qquad \mu_i \xi_i = 0,
+   $$
+   so support vectors with $0 < \alpha_i < C$ lie exactly on the margin ($\xi_i = 0$), points with $\alpha_i = C$ incur slack ($\xi_i > 0$), and non-support points have $\alpha_i = 0$.
+
 ### Kernel Trick
 - Replace dot products with kernel $K(x_i, x_j) = \phi(x_i)^{\top} \phi(x_j)$ to work in feature space without explicit mapping.
 - Common kernels: linear $x_i^{\top} x_j$; polynomial $(x_i^{\top} x_j + c)^d$; RBF $\exp\bigl(-\tfrac{\lVert x_i - x_j \rVert^2}{2 \sigma^2}\bigr)$.
@@ -519,20 +576,20 @@ subject to $0 \le \alpha_i \le C$ and $\sum_{i=1}^N \alpha_i y_i = 0$. At optimu
 1. **Primal Lagrangian:** Introduce multipliers $\alpha_i \ge 0$ for the margin constraints and $\mu_i \ge 0$ for the non-negativity of $\xi_i$:
 
    $$
-   \mathcal{L}(w,b,\xi,\alpha,\mu) = \tfrac{1}{2}\|w\|_2^2 + C\sum_i \xi_i
+   L(w,b,\xi,\alpha,\mu) = \tfrac{1}{2}\|w\|_2^2 + C\sum_i \xi_i
    - \sum_i \alpha_i \big[y_i(w^\top x_i + b) - 1 + \xi_i\big]
    - \sum_i \mu_i \xi_i.
    $$
 
 1. **Stationarity:**  
-   - $\partial \mathcal{L}/\partial w = 0 \Rightarrow w = \sum_i \alpha_i y_i x_i$.
-   - $\partial \mathcal{L}/\partial b = 0 \Rightarrow \sum_i \alpha_i y_i = 0$.
-   - $\partial \mathcal{L}/\partial \xi_i = 0 \Rightarrow C - \alpha_i - \mu_i = 0$.
+   - $\partial L/\partial w = 0 \Rightarrow w = \sum_i \alpha_i y_i x_i$.
+   - $\partial L/\partial b = 0 \Rightarrow \sum_i \alpha_i y_i = 0$.
+   - $\partial L/\partial \xi_i = 0 \Rightarrow C - \alpha_i - \mu_i = 0$.
 1. **Bounding multipliers:** Since $\mu_i \ge 0$, the last relation enforces $0 \le \alpha_i \le C$.
-1. **Dual objective:** Substitute the stationary expressions into $\mathcal{L}$, eliminate $\mu_i$ using $\mu_i = C - \alpha_i$, and simplify to obtain
-$$
-g(\alpha) = \sum_i \alpha_i - \tfrac{1}{2}\sum_{i,j} \alpha_i \alpha_j y_i y_j x_i^\top x_j.
-$$
+1. **Dual objective:** Substitute the stationary expressions into $L$, eliminate $\mu_i$ using $\mu_i = C - \alpha_i$, and simplify to obtain
+   $$
+   g(\alpha) = \sum_i \alpha_i - \tfrac{1}{2}\sum_{i,j} \alpha_i \alpha_j y_i y_j x_i^\top x_j.
+   $$
 1. **KKT conditions:** Complementary slackness provides the usual support-vector structure: $\alpha_i [y_i(w^\top x_i + b) - 1 + \xi_i]=0$ and $(C - \alpha_i)\xi_i = 0$. Indices with $0 < \alpha_i < C$ lie exactly on the soft margin and supply $b^\star$.
 
 #### Question 4 – Ridge Regression Closed-Form Solution
