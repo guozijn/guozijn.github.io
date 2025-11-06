@@ -57,6 +57,14 @@ tags:
 - Convexity check: Hessian $\succeq 0$; Jensen’s inequality for expectations.
 - Gradient descent update: $w \leftarrow w - \eta \nabla L$; ensure step size respects Lipschitz constant.
 
+### Calculus & Differentiation Formulas
+- Basic derivatives: $\frac{d}{dx} c = 0$, $\frac{d}{dx} x^n = n x^{n-1}$, $\frac{d}{dx} e^{ax} = a e^{ax}$, $\frac{d}{dx} \ln x = \frac{1}{x}$, $\frac{d}{dx} \sin x = \cos x$, $\frac{d}{dx} \cos x = -\sin x$.
+- Product and quotient rules: $\frac{d}{dx}[u(x) v(x)] = u'(x) v(x) + u(x) v'(x)$, $\frac{d}{dx}\frac{u(x)}{v(x)} = \frac{u'(x) v(x) - u(x) v'(x)}{[v(x)]^2}$.
+- Chain rule: for a composition $f(g(x))$, $\frac{d}{dx} f(g(x)) = f'(g(x)) \cdot g'(x)$; iteratively apply for deeper composites.
+- Partial derivatives: $\frac{\partial}{\partial x_i} f(x_1,\dots,x_d)$ treats other variables as constants; gradient stacks partials as $\nabla f = [\frac{\partial f}{\partial x_1}, \dots, \frac{\partial f}{\partial x_d}]^{\top}$.
+- Multivariate chain rule: if $y = f(u)$ with $u = g(x)$, then $\frac{dy}{dx} = \nabla f(u)^{\top} J_g(x)$ where $J_g$ is the Jacobian of $g$; reduces to standard chain rule when $g: \mathbb{R} \to \mathbb{R}$.
+- Composite function example: for $h(x) = \sin(x^2)$, $h'(x) = \cos(x^2) \cdot 2x$; for nested maps $f(g(h(x)))$, differentiate from outermost to innermost.
+
 ## Formula Table (based on SML Slides)
 
 | Topic | Formula | Notes |
