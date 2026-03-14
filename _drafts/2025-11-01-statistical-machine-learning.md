@@ -1,5 +1,5 @@
 ---
-title: "Statistical Machine Learning: Study Notes"
+title: "Statistical Machine Learning: Learning Notes"
 tags:
   - machine learning
 ---

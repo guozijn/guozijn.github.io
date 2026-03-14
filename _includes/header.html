@@ -3,13 +3,13 @@
     {%- assign default_paths = site.pages | map: "path" -%}
     {%- assign page_paths = site.header_pages | default: default_paths -%}
 
-    <a class="site-title site-title--icon-only" rel="author" href="{{ "/" | relative_url }}" aria-label="{{ site.title | escape }}">
-      <span class="sr-only">{{ site.title | escape }}</span>
+    <a class="site-title" rel="author" href="{{ "/" | relative_url }}">
       <svg class="site-title__icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
         <path d="M6 14.5L16 6l10 8.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
         <path d="M10 14.5V25h12V14.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
         <path d="M14 24.5V19a2 2 0 0 1 4 0v5.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
       </svg>
+      <span class="site-title__text">{{ site.title | escape }}</span>
     </a>
 
     {%- if page_paths -%}
@@ -27,9 +27,13 @@
           {%- for path in page_paths -%}
             {%- assign my_page = site.pages | where: "path", path | first -%}
             {%- if my_page.title -%}
-              <a class="page-link" href="{{ my_page.url | relative_url }}">{{ my_page.title | escape }}</a>
+              <a class="page-link{% if page.url == my_page.url %} page-link--active{% endif %}" href="{{ my_page.url | relative_url }}">{{ my_page.title | escape }}</a>
             {%- endif -%}
           {%- endfor -%}
+          <button class="nav-theme-toggle" type="button" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
+            <span class="icon-moon" aria-hidden="true">🌙</span>
+            <span class="icon-sun" aria-hidden="true">☀️</span>
+          </button>
         </div>
       </nav>
     {%- endif -%}

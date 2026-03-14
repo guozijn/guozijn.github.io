@@ -2,21 +2,321 @@
 layout: default
 ---
 
-<article class="post">
-  <header class="post-header">
-    <h1 class="post-title">{{ page.title }}</h1>
-    <p class="post-meta">{{ page.date | date: "%B %-d, %Y" }}</p>
-  </header>
-  <div class="post-content">
-    {{ content }}
-  </div>
-</article>
+{%- assign post_category = page.categories.first -%}
+{%- if post_category == nil or post_category == '' -%}
+  {%- assign post_category = page.path | split: '/' | first -%}
+{%- endif -%}
+{%- assign post_category_key = post_category | downcase -%}
+{%- assign post_category_label = post_category -%}
+{%- case post_category_key -%}
+  {%- when 'life', 'journal' -%}
+    {%- assign post_category_key = 'journal' -%}
+    {%- assign post_category_label = 'Journal' -%}
+  {%- when 'study', 'learning' -%}
+    {%- assign post_category_key = 'learning' -%}
+    {%- assign post_category_label = 'Learning' -%}
+  {%- when 'tech', 'engineering' -%}
+    {%- assign post_category_key = 'engineering' -%}
+    {%- assign post_category_label = 'Engineering' -%}
+{%- endcase -%}
 
-<div class="post-actions">
-  <button type="button" class="print-article-button" onclick="window.print()">
-    Print this article
-  </button>
+<div class="reading-progress" aria-hidden="true">
+  <div class="reading-progress__bar" data-reading-progress></div>
 </div>
+
+<div class="post-layout">
+  <article class="post">
+    <header class="post-header">
+      <div class="post-header__top">
+        {%- if post_category -%}
+          <span class="post-overline post-overline--category">{{ post_category_label }}</span>
+        {%- endif -%}
+        <span class="post-overline__sep">·</span>
+        <time class="post-overline" datetime="{{ page.date | date: '%Y-%m-%d' }}">{{ page.date | date: "%B %-d, %Y" }}</time>
+        {%- if page.reading_time -%}
+          <span class="post-overline__sep">·</span>
+          <span class="post-overline">{{ page.reading_time }} min read</span>
+        {%- endif -%}
+      </div>
+
+      <h1 class="post-title">{{ page.title }}</h1>
+
+      {%- if page.tags and page.tags.size > 0 -%}
+        <div class="post-meta">
+          <span class="post-meta__tags">
+            {%- for tag in page.tags limit: 5 -%}
+              <a class="post-meta__tag" href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}">#{{ tag }}</a>
+            {%- endfor -%}
+          </span>
+        </div>
+      {%- endif -%}
+    </header>
+
+    <div class="post-content" data-post-content>
+      {{ content }}
+    </div>
+
+    <div class="post-actions">
+      <button type="button" class="print-article-button" onclick="window.print()">
+        <span aria-hidden="true">⎙</span>
+        <span>Print</span>
+      </button>
+    </div>
+  </article>
+
+  <aside class="post-toc" data-post-toc hidden>
+    <div class="post-toc__inner">
+      <div class="post-toc__head">
+        <p class="post-toc__title">Contents</p>
+        <button type="button" class="post-toc__toggle" data-post-toc-toggle aria-expanded="true" aria-label="Collapse table of contents">Hide</button>
+      </div>
+      <nav class="post-toc__nav" aria-label="Table of contents">
+        <ul class="post-toc__list" data-post-toc-list></ul>
+      </nav>
+    </div>
+  </aside>
+</div>
+
+{%- if page.previous or page.next -%}
+  <nav class="post-pagination" aria-label="Post navigation">
+    {%- if page.previous -%}
+      <a class="post-pagination__link post-pagination__link--prev" href="{{ page.previous.url | relative_url }}">
+        <span class="post-pagination__arrow" aria-hidden="true">←</span>
+        <span class="post-pagination__label">Previous post</span>
+        <span class="post-pagination__title">{{ page.previous.title }}</span>
+      </a>
+    {%- else -%}
+      <span class="post-pagination__spacer"></span>
+    {%- endif -%}
+
+    {%- if page.next -%}
+      <a class="post-pagination__link post-pagination__link--next" href="{{ page.next.url | relative_url }}">
+        <span class="post-pagination__arrow" aria-hidden="true">→</span>
+        <span class="post-pagination__label">Next post</span>
+        <span class="post-pagination__title">{{ page.next.title }}</span>
+      </a>
+    {%- endif -%}
+  </nav>
+{%- endif -%}
+
+<button type="button" class="back-to-top" data-back-to-top aria-label="Back to top">↑</button>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var content = document.querySelector('[data-post-content]');
+    var toc = document.querySelector('[data-post-toc]');
+    var tocList = document.querySelector('[data-post-toc-list]');
+    var tocToggle = document.querySelector('[data-post-toc-toggle]');
+    var progressBar = document.querySelector('[data-reading-progress]');
+    var backToTop = document.querySelector('[data-back-to-top]');
+    if (!content) return;
+
+    function slugify(text) {
+      return (text || '')
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\u4e00-\u9fa5\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-');
+    }
+
+    var seenIds = {};
+    var headings = Array.prototype.slice.call(content.querySelectorAll('h2, h3'));
+
+    headings.forEach(function (heading) {
+      var baseId = heading.id || slugify(heading.textContent);
+      if (!baseId) return;
+      if (seenIds[baseId]) {
+        seenIds[baseId] += 1;
+        heading.id = baseId + '-' + seenIds[baseId];
+      } else {
+        seenIds[baseId] = 1;
+        heading.id = baseId;
+      }
+
+      if (!heading.querySelector('.post-anchor')) {
+        var anchor = document.createElement('a');
+        anchor.className = 'post-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.setAttribute('aria-label', 'Link to section ' + heading.textContent.trim());
+        anchor.textContent = '#';
+        heading.appendChild(anchor);
+      }
+    });
+
+    if (toc && tocList) {
+      var tocHeadings = headings.filter(function (heading) {
+        return heading.id && heading.textContent.trim() !== '';
+      });
+
+      if (tocHeadings.length >= 2) {
+        toc.hidden = false;
+
+        tocHeadings.forEach(function (heading) {
+          var item = document.createElement('li');
+          item.className = 'post-toc__item post-toc__item--' + heading.tagName.toLowerCase();
+
+          var link = document.createElement('a');
+          link.className = 'post-toc__link';
+          link.href = '#' + heading.id;
+          link.textContent = heading.textContent.replace(/#$/, '').trim();
+          link.dataset.target = heading.id;
+
+          item.appendChild(link);
+          tocList.appendChild(item);
+        });
+
+        var tocLinks = Array.prototype.slice.call(tocList.querySelectorAll('.post-toc__link'));
+        var activeHeadingId = '';
+        var observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            activeHeadingId = entry.target.id;
+            tocLinks.forEach(function (link) {
+              link.classList.toggle('is-active', link.dataset.target === activeHeadingId);
+            });
+          });
+        }, {
+          rootMargin: '-18% 0px -62% 0px',
+          threshold: [0, 1]
+        });
+
+        tocHeadings.forEach(function (heading) {
+          observer.observe(heading);
+        });
+
+        if (tocToggle) {
+          tocToggle.addEventListener('click', function () {
+            var isCollapsed = toc.classList.toggle('is-collapsed');
+            tocToggle.textContent = isCollapsed ? 'Show' : 'Hide';
+            tocToggle.setAttribute('aria-expanded', String(!isCollapsed));
+            tocToggle.setAttribute('aria-label', (isCollapsed ? 'Expand' : 'Collapse') + ' table of contents');
+          });
+        }
+
+        tocLinks.forEach(function (link) {
+          link.addEventListener('click', function () {
+            tocLinks.forEach(function (item) {
+              item.classList.toggle('is-active', item === link);
+            });
+          });
+        });
+      }
+    }
+
+    Array.prototype.slice.call(content.querySelectorAll('p')).forEach(function (paragraph) {
+      var childNodes = Array.prototype.filter.call(paragraph.childNodes, function (node) {
+        return !(node.nodeType === Node.TEXT_NODE && node.textContent.trim() === '');
+      });
+      var images = paragraph.querySelectorAll('img');
+      if (images.length !== 1 || childNodes.length !== 1 || childNodes[0].tagName !== 'IMG') return;
+
+      var image = images[0];
+      var altText = (image.getAttribute('alt') || '').trim();
+      var figure = document.createElement('figure');
+      figure.className = 'post-figure';
+      paragraph.parentNode.insertBefore(figure, paragraph);
+      figure.appendChild(image);
+
+      var shouldCaption = altText && (/[\s\u4e00-\u9fa5]/.test(altText)) && !/\.(png|jpe?g|gif|webp|svg)$/i.test(altText);
+      if (shouldCaption) {
+        var caption = document.createElement('figcaption');
+        caption.className = 'post-figure__caption';
+        caption.textContent = altText;
+        figure.appendChild(caption);
+      }
+
+      paragraph.remove();
+    });
+
+    Array.prototype.slice.call(content.querySelectorAll('table')).forEach(function (table) {
+      if (table.parentElement && table.parentElement.classList.contains('post-table-wrap')) return;
+
+      var wrapper = document.createElement('div');
+      wrapper.className = 'post-table-wrap';
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
+
+    var codeBlocks = Array.prototype.slice.call(content.querySelectorAll('.highlight, pre'));
+    codeBlocks.forEach(function (block) {
+      if (block.matches('pre') && block.closest('.highlight')) return;
+      if (block.querySelector('.code-copy-button')) return;
+
+      var container = block;
+      if (block.matches('pre')) {
+        container = document.createElement('div');
+        container.className = 'code-block';
+        block.parentNode.insertBefore(container, block);
+        container.appendChild(block);
+      } else {
+        container.classList.add('code-block');
+      }
+
+      var languageSource = container.closest('[class*="language-"]') || container.parentElement;
+      var languageMatch = languageSource && languageSource.className && languageSource.className.match(/language-([a-z0-9_+-]+)/i);
+      var language = languageMatch ? languageMatch[1].toLowerCase() : '';
+      if (language && language !== 'plaintext' && !container.querySelector('.code-language-badge')) {
+        var badge = document.createElement('span');
+        badge.className = 'code-language-badge';
+        badge.textContent = language;
+        container.appendChild(badge);
+      }
+
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'code-copy-button';
+      button.textContent = 'Copy';
+      button.setAttribute('aria-label', 'Copy code to clipboard');
+
+      button.addEventListener('click', async function () {
+        var source = container.querySelector('.rouge-code pre, td.rouge-code pre, .code pre, pre, code') || container;
+        var text = (source.innerText || source.textContent || '').replace(/\n$/, '');
+        if (!text) return;
+
+        try {
+          await navigator.clipboard.writeText(text);
+          button.textContent = 'Copied';
+          window.setTimeout(function () { button.textContent = 'Copy'; }, 1600);
+        } catch (error) {
+          button.textContent = 'Failed';
+          window.setTimeout(function () { button.textContent = 'Copy'; }, 1600);
+        }
+      });
+
+      container.appendChild(button);
+    });
+
+    function updateReadingProgress() {
+      if (!progressBar) return;
+      var rect = content.getBoundingClientRect();
+      var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+      var total = Math.max(content.offsetHeight - viewportHeight * 0.4, 1);
+      var progressed = Math.min(Math.max((viewportHeight * 0.2 - rect.top), 0), total);
+      var percent = Math.max(0, Math.min((progressed / total) * 100, 100));
+      progressBar.style.width = percent + '%';
+    }
+
+    function updateBackToTop() {
+      if (!backToTop) return;
+      backToTop.classList.toggle('is-visible', window.scrollY > 480);
+    }
+
+    if (backToTop) {
+      backToTop.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    updateReadingProgress();
+    updateBackToTop();
+    window.addEventListener('scroll', function () {
+      updateReadingProgress();
+      updateBackToTop();
+    }, { passive: true });
+    window.addEventListener('resize', updateReadingProgress);
+  });
+</script>
 
 {% if page.comments != false %}
   {% include disqus_comments.html %}

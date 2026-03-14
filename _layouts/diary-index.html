@@ -5,14 +5,20 @@ layout: default
 {%- assign page_size = page.page_size | default: 10 -%}
 {%- assign sorted_entries = site.diary | sort: 'date' | reverse -%}
 {%- assign entry_count = sorted_entries | size -%}
+
+<div class="page-wrap">
+{%- assign diary_intro = content | strip -%}
+{%- if diary_intro != '' -%}
+  <div class="diaries__intro">
+    {{ content }}
+  </div>
+{%- endif -%}
+
 <section class="diaries">
-  <header class="diaries__header">
-    <p class="diaries__eyebrow">Notebook / Diary</p>
-    <h1 class="diaries__title">{{ page.title | default: "Diary" }}</h1>
-    {%- if page.description -%}
-      <p class="diaries__description">{{ page.description }}</p>
-    {%- endif -%}
-  </header>
+  <div class="diaries__head">
+    <h2 class="diaries__title">Recent Entries</h2>
+    <span class="diaries__count">{{ entry_count }}</span>
+  </div>
 
   {%- if sorted_entries.size == 0 -%}
     <p class="diaries__empty">No diary entries yet &mdash; capture your first thought today.</p>
@@ -47,6 +53,7 @@ layout: default
     {%- endif -%}
   {%- endif -%}
 </section>
+</div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {

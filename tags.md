@@ -8,7 +8,10 @@ permalink: /tags/
 <div class="tag-index">
   {% for tag in tags %}
     <section id="{{ tag[0] | slugify }}" class="tag-index__section">
-      <h2 class="tag-index__title">{{ tag[0] }}</h2>
+      <h2 class="tag-index__title">
+        <span>{{ tag[0] }}</span>
+        <span class="tag-index__count">{{ tag[1].size }}</span>
+      </h2>
       <ol class="tag-index__list">
         {% assign posts = tag[1] | sort: 'date' | reverse %}
         {% for post in posts %}

@@ -1,5 +1,5 @@
 ---
-title: "Algorithm and Data Structure Analysis: Study Notes"
+title: "Algorithm and Data Structure Analysis: Learning Notes"
 tags:
   - algorithm
   - data structure
