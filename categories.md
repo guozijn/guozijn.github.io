@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Themes
+title: Topics
 permalink: /categories/
 ---
 
