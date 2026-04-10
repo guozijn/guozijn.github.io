@@ -6,13 +6,13 @@ tags:
 ---
 ## Key Concepts
 - **Neuron (Perceptron)**  
-  A neutron is the fundamental unit of the network. Each neuron computes a weighted sum of inputs plus a bias, then applies an activation function (e.g. step, sigmoid)
+  A neuron is the fundamental unit of the network. Each neuron computes a weighted sum of inputs plus a bias, then applies an activation function (e.g. step, sigmoid).
 
 - **Input Layer**  
   The input layer accepts the raw data features. Each input is multiplied by an associated weight and passed to the neuron. It is often represented by a vector $\mathbf{x} \in \mathbb{R}^n$.
 
 - **Weights and Bias**  
-  - Weights represent the importance of each input feature. It is often represented by a vector $\mathbf{w} \in \mathbb{R}^n$.
+  - Weights represent the importance of each input feature. They are often represented by a vector $\mathbf{w} \in \mathbb{R}^n$.
   - Bias allows shifting the decision boundary away from the origin.  
 
 - **Linear Combination**  

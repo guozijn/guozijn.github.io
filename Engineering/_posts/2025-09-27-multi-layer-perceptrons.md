@@ -23,7 +23,7 @@ tags:
   - Deeper layers capture **higher-level abstractions** (e.g., object shapes).  
 
 - **Activation Functions**  
-  Unlike the single-layer perceptron (which often uses only sigmoid), MLPs commonly use:  
+  Unlike a classic perceptron (which often uses a step function) or logistic regression (which uses sigmoid), MLPs commonly use:  
   - **ReLU**: $f(x) = \max(0, x)$ (default in modern deep learning).  
   - **Tanh**: rescales input to $[-1,1]$.  
   - **Sigmoid**: mainly used in the output layer for binary classification.  
@@ -126,7 +126,7 @@ tags:
 
   - Output layer:
     $$
-    \frac{\partial \mathcal{L}}{\partial z} = p - y \quad \in \mathbb{R}^m
+    \frac{\partial \mathcal{L}}{\partial z} = \frac{1}{m}(p - y) \quad \in \mathbb{R}^m
     $$
 
   - Gradients for output weights and bias:
@@ -150,13 +150,14 @@ tags:
 
 ## Implementation and Explanation  
 
-This section contrasts a from-scratch NumPy implementation with an equivalent PyTorch model. Both pipelines share the same data preprocessing, hyperparameters, and evaluation workflow so their learning curves can be compared directly.
+This section contrasts a from-scratch NumPy implementation with an equivalent PyTorch model. Both pipelines share the same data preprocessing, hyperparameters, and evaluation workflow so their learning curves can be compared directly. A correct manual implementation should produce broadly similar learning behaviour to PyTorch; large gaps usually point to implementation details such as gradient scaling, initialisation, or optimiser settings rather than to autograd itself.
 
 ### Custom Version
 
 The custom network is assembled from lightweight building blocks: `Linear`, `ReLU`, and `CrossEntropy`. Each layer stores the activations it needs for the backward pass, computes gradients manually, and updates its parameters via SGD in the `step` routine. Utility helpers handle one-hot encoding, mini-batch iteration, normalisation, and accuracy tracking so the training loop mirrors a framework-driven workflow while keeping every tensor transformation explicit.
 ```python
 import numpy as np
+from pathlib import Path
 
 np.random.seed(8)
 
@@ -171,9 +172,8 @@ class Linear:
         return self.W @ x + self.b
 
     def backward(self, grad_output):
-        batch_size = grad_output.shape[1]
-        self.dW = grad_output @ self.x.T / batch_size
-        self.db = np.sum(grad_output, axis=1, keepdims=True) / batch_size
+        self.dW = grad_output @ self.x.T
+        self.db = np.sum(grad_output, axis=1, keepdims=True)
         return self.W.T @ grad_output
 
 
@@ -250,10 +250,10 @@ def accuracy(logits, labels):
     return np.mean(preds == labels)
 
 
-data_dir = "~/Code/data"
+data_dir = Path.home() / "Code" / "data"
 
-train_data = np.loadtxt(data_dir + '/train.csv', delimiter=',')
-test_data = np.loadtxt(data_dir + '/test.csv', delimiter=',')
+train_data = np.loadtxt(data_dir / "train.csv", delimiter=",")
+test_data = np.loadtxt(data_dir / "test.csv", delimiter=",")
 
 y_train_full = train_data[:, 0].astype(int)
 X_train_full = train_data[:, 1:]
@@ -345,14 +345,15 @@ import numpy as np
 import torch
 from torch import nn
 from torch.utils.data import TensorDataset, DataLoader
+from pathlib import Path
 torch.manual_seed(8)
 
 
 # Load data and create train/validation/test splits
-data_dir = "~/Code/data"
+data_dir = Path.home() / "Code" / "data"
 
-train_data = np.loadtxt(data_dir + '/train.csv', delimiter=',')
-test_data = np.loadtxt(data_dir + '/test.csv', delimiter=',')
+train_data = np.loadtxt(data_dir / "train.csv", delimiter=",")
+test_data = np.loadtxt(data_dir / "test.csv", delimiter=",")
 
 y_train_full = train_data[:, 0].astype(int)
 X_train_full = train_data[:, 1:]
@@ -537,4 +538,4 @@ PyTorch test accuracy: 0.9707, loss: 0.1009
 
 #### Summary
 
-Side-by-side results highlight how much leverage a mature framework provides: the hand-written network converges slowly and tops out around 0.80 validation accuracy, while the PyTorch model with identical preprocessing reaches 0.97+ in only a few epochs thanks to optimised primitives and automatic differentiation. The NumPy baseline, however, remains valuable for building intuition about tensor shapes, gradient flow, and training dynamics before delegating the heavy lifting to PyTorch.
+Side-by-side results highlight how much leverage a mature framework provides: PyTorch removes most manual bookkeeping around gradient calculation, parameter updates, device placement, and batching. The NumPy baseline remains valuable for building intuition about tensor shapes, gradient flow, and training dynamics, but its results should be checked carefully because small scaling mistakes can change the effective learning rate by orders of magnitude.

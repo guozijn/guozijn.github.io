@@ -13,11 +13,11 @@ Raw tokens are first mapped to dense vectors through an embedding matrix so that
 
 ### Positional Information
 
-Because self-attention is permutation-invariant, Transformers inject order information with positional encodings. Classical sinusoidal encodings let the model generalise to longer sequences, while learnable embeddings allow the model to adapt positions during training. Modern variants sometimes rely on relative position encodings or rotary embeddings to better capture long context interactions.
+Because self-attention without positional information is permutation-equivariant, Transformers inject order information with positional encodings. Classical sinusoidal encodings can be evaluated at positions beyond the training length, while learnable embeddings allow the model to adapt positions during training but are fixed to the learned context range. Modern variants sometimes rely on relative position encodings or rotary embeddings to better capture long context interactions.
 
 ### Scaled Dot-Product Self-Attention
 
-For each token, the model projects embeddings into queries (Q), keys (K), and values (V). Attention weights are computed as `softmax(QKᵀ / sqrt(d_k))`, where `d_k` is the head dimension to prevent large dot products from saturating the softmax. The output is a weighted sum of the value vectors, allowing every position to gather information from the entire context window (`block_size`).
+For each token, the model projects embeddings into queries (Q), keys (K), and values (V). Attention weights are computed as `softmax(QKᵀ / sqrt(d_k))`, where `d_k` is the head dimension to prevent large dot products from saturating the softmax. The output is a weighted sum of the value vectors. Encoder attention can gather information from the entire context window (`block_size`), while decoder-only language models use a causal mask so each position only attends to itself and earlier positions.
 
 ### Multi-Head Attention
 
@@ -44,7 +44,7 @@ The original Transformer pairs an encoder that builds contextualised representat
 
 ### Inference-Time Generation
 
-During autoregressive generation, the model caches key-value pairs to avoid recomputing attention for past tokens. Sampling strategies such as temperature, top-k, and nucleus sampling trade off creativity against determinism. For instruction-following models, additional techniques like contrastive decoding or aligning with human feedback further shape the output distribution.
+During autoregressive generation, the model caches key-value pairs to avoid recomputing attention for past tokens. Sampling strategies such as temperature, top-k, nucleus sampling, and contrastive decoding trade off creativity against determinism. For instruction-following models, alignment training such as RLHF or DPO shapes the model before inference, while decoding settings shape each generated response.
 
 ### PyTorch Skeleton
 
@@ -62,6 +62,7 @@ class TransformerLM(nn.Module):
         n_layer: int = 3,
         n_head: int = 6,
         dropout: float = 0.2,
+        tie_weights: bool = True,
     ) -> None:
         super().__init__()
         self.block_size = block_size
@@ -78,12 +79,19 @@ class TransformerLM(nn.Module):
         self.layers = nn.TransformerEncoder(encoder_layer, num_layers=n_layer)
         self.norm = nn.LayerNorm(n_embd)
         self.lm_head = nn.Linear(n_embd, vocab_size, bias=False)
+        if tie_weights:
+            self.lm_head.weight = self.token_embed.weight
 
     def forward(self, idx: torch.Tensor) -> torch.Tensor:
         if idx.size(1) > self.block_size:
             raise ValueError("Sequence length exceeds block size.")
         x = self.token_embed(idx) + self.pos_embed[:, : idx.size(1)]
-        x = self.layers(x)
+        seq_len = idx.size(1)
+        causal_mask = torch.triu(
+            torch.full((seq_len, seq_len), float("-inf"), device=idx.device),
+            diagonal=1,
+        )
+        x = self.layers(x, mask=causal_mask)
         x = self.norm(x)
         return self.lm_head(x)
 

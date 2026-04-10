@@ -73,10 +73,10 @@ tags:
 | Matrix–Vector Product | $Ab = [a_1^{\top} b, \dots, a_n^{\top} b]^{\top}$ | Treat rows $a_i^{\top}$ of $A$ as vectors whose dot-products with $b$ form the result. |
 | Diagonal Scaling | $A\Lambda = [a_1,\dots,a_n] \operatorname{diag}(\lambda_1,\dots,\lambda_n) = [\lambda_1 a_1,\dots,\lambda_n a_n]$ | Scaling each column vector $a_i$ by its associated eigenvalue. |
 | Inner Product | $\langle x, y \rangle = x^{\top} y = \sum_i x_i y_i$ | Definition of vector inner product. |
-| Vector Norms | $\|x\|_2 = \sqrt{\sum_i x_i^2}$<br>$\|x\|_1 = \sum_i \|x_i\|$<br>$\|x\|_p = \big(\sum_i \|x_i\|^p\big)^{1/p}$ | Common norms listed on "Inner product and norms" slide. |
+| Vector Norms | $\|x\|_2 = \sqrt{\sum_i x_i^2}$<br>$\|x\|_1 = \sum_i |x_i|$<br>$\|x\|_p = \big(\sum_i |x_i|^p\big)^{1/p}$ | Common norms listed on "Inner product and norms" slide. |
 | Trace Basics | $\operatorname{Tr}(A) = \sum_i a_{ii}$, $\operatorname{Tr}(a) = a$ | Definition for square matrices and scalars. |
 | Trace Identities | $\operatorname{Tr}(X^{\top} Y) = \operatorname{Tr}(XY^{\top}) = \operatorname{Tr}(Y^{\top} X) = \operatorname{Tr}(YX^{\top})$ | Cyclic invariance of the trace used in slides. |
-| Frobenius Norm | $\lVert A\rVert_F=\sqrt{\sum_{i,j}a_{ij}^{2}}=\sqrt{\operatorname{Tr}!\big(AA^{\top}\big)}=\sqrt{\operatorname{Tr}!\big(A^{\top}A\big)}$ | Connects Frobenius norm to the trace operator. |
+| Frobenius Norm | $\lVert A\rVert_F=\sqrt{\sum_{i,j}a_{ij}^{2}}=\sqrt{\operatorname{Tr}\big(AA^{\top}\big)}=\sqrt{\operatorname{Tr}\big(A^{\top}A\big)}$ | Connects Frobenius norm to the trace operator. |
 | Linear Subspace | $\mathcal{S} = \{ x \mid x = t_1 v_1 + t_2 v_2 + \cdots + t_k v_k \}$ | All linear combinations of basis vectors span the subspace. |
 | Orthogonal Basis | $\langle v_i, v_j \rangle = 0,~ \forall i \neq j$ | Condition for orthogonality in the basis set. |
 | Eigenvalue Equation | $Au = \lambda u$ | Defines eigenpairs $(\lambda, u)$ of matrix $A$. |
@@ -88,14 +88,14 @@ tags:
 | Bayes Rule | $p(y\mid x) = \frac{p(x\mid y) p(y)}{p(x)}$ | Derived in Bayesian classification slide. |
 | Linear Regression (Normal Equation) | $\hat{w} = \arg\min_w \sum_{i=1}^N (w^{\top} x_i - y_i)^2 = (X^{\top} X)^{-1} X^{\top} y$ | Closed-form solution from regression section. |
 | Ridge Regression | $\mathcal{L}(w) = \sum_{i=1}^N (w^{\top} x_i - y_i)^2 + \lambda \|w\|_2^2$<br>$\hat{w} = (X^{\top} X + \lambda I)^{-1} X^{\top} y$ | Regularised regression objective and solution. |
-| P-Norm Illustration | $\lVert x\rVert_{0}=\lvert{i:x_{i}\neq0}\rvert,\quad \lVert x\rVert_{1}=\sum_{i}\lvert x_{i}\rvert,\quad \lVert x\rVert_{2}=\big(\sum_{i}x_{i}^{2}\big)^{1/2},\quad \lVert x\rVert_{\infty}=\max_{i}\lvert x_{i}\rvert$ | Highlights how different $p$ values shape the norm. |
+| P-Norm Illustration | $\lVert x\rVert_{0}=\lvert\{i:x_{i}\neq0\}\rvert,\quad \lVert x\rVert_{1}=\sum_{i}\lvert x_{i}\rvert,\quad \lVert x\rVert_{2}=\big(\sum_{i}x_{i}^{2}\big)^{1/2},\quad \lVert x\rVert_{\infty}=\max_{i}\lvert x_{i}\rvert$ | Highlights how different $p$ values shape the norm. |
 | Gaussian Mixture Model | $p(x) = \sum_{k=1}^K \pi_k \mathcal{N}(x \mid \mu_k, \Sigma_k)$ | Likelihood decomposition used by EM. |
 | EM Responsibilities | $\gamma_{ik} = \frac{\pi_k \mathcal{N}(x_i \mid \mu_k, \Sigma_k)}{\sum_{j=1}^K \pi_j \mathcal{N}(x_i \mid \mu_j, \Sigma_j)}$ | E-step posterior of latent component. |
 | Log-Likelihood for EM | $\mathcal{L}(\theta) = \sum_{i=1}^N \log \sum_{k=1}^K \pi_k \mathcal{N}(x_i \mid \mu_k, \Sigma_k)$ | Objective maximised in EM algorithm. |
 | K-Means Objective | $\min_{\{c_i\},\{\mu_k\}} \sum_{i=1}^N \|x_i - \mu_{c_i}\|_2^2$ | Shown on K-means slides. |
-| MDP Return & Value | $R_{t}=\sum_{k=0}^{\infty}\gamma^{k}r_{t+k},\quad V^{\pi}(s)=\mathbb{E}{\pi}[R{t}\mid s_{t}=s],\quad Q^{\pi}(s,a)=\mathbb{E}{\pi}[R{t}\mid s_{t}=s,a_{t}=a]$ | Definitions from reinforcement learning module. |
+| MDP Return & Value | $R_{t}=\sum_{k=0}^{\infty}\gamma^{k}r_{t+k},\quad V^{\pi}(s)=\mathbb{E}_{\pi}[R_t\mid s_t=s],\quad Q^{\pi}(s,a)=\mathbb{E}_{\pi}[R_t\mid s_t=s,a_t=a]$ | Definitions from reinforcement learning module. |
 | Bellman Expectation | $V^\pi(s) = \sum_a \pi(a\mid s) \sum_{s'} P(s'\mid s,a) [r(s,a) + \gamma V^\pi(s')]$ | Policy evaluation equation. |
-| Bellman Optimality | $V^{}(s)=\max_{a}\sum_{s'}P(s'\mid s,a),[r(s,a)+\gamma V^{}(s')],\quad Q^{}(s,a)=r(s,a)+\gamma\sum_{s'}P(s'\mid s,a)\max_{a'}Q^{}(s',a')$ | Optimal value function recursions. |
+| Bellman Optimality | $V^\ast(s)=\max_{a}\sum_{s'}P(s'\mid s,a)[r(s,a)+\gamma V^\ast(s')],\quad Q^\ast(s,a)=r(s,a)+\gamma\sum_{s'}P(s'\mid s,a)\max_{a'}Q^\ast(s',a')$ | Optimal value function recursions. |
 | Policy Improvement | $\pi'(s) = \arg\max_a \sum_{s'} P(s'\mid s,a)[r(s,a) + \gamma V^\pi(s')]$ | Step in policy iteration slides. |
 | Q-Learning Update | $Q(s_t,a_t) \leftarrow Q(s_t,a_t) + \alpha \big[r_t + \gamma \max_{a'} Q(s_{t+1}, a') - Q(s_t,a_t)\big]$ | Incremental update rule from RL section. |
 {: .formula-table }
@@ -294,7 +294,7 @@ tags:
 | Softmax (vector) | $\frac{e^{z_i}}{\sum_j e^{z_j}}$ | $\sigma_i(\delta_{ij} - \sigma_j)$ | $(0, 1)$ per class | Converts logits to class probabilities; gradient couples outputs. |
 
 ### Regularisation & Dropout
-- Dropout randomly zeroes activations with keep probability $p$; inference scales weights by $p$ (practice exam Q6).
+- Dropout randomly zeroes activations with keep probability $p$; with standard dropout, inference scales weights or activations by $p$, while inverted dropout scales activations by $1/p$ during training and uses no extra inference scaling.
 - Batch norm normalizes activations per minibatch; complements but does not replace dropout.
 - L2 regularisation (weight decay) penalises $\lambda \lVert w \rVert_2^2$; shrinks weights, discourages large values, stabilises learning, equivalent to Gaussian prior in Bayesian view.
 - L1 regularisation penalises $\lambda \lVert w \rVert_1$; drives sparsity, acts like Laplace prior, useful for feature selection.
@@ -316,7 +316,7 @@ tags:
 ### Key Properties & Exam Hooks
 - Universal Approximation: single hidden layer with non-linear activation can approximate continuous functions on compact sets; depth improves parameter efficiency.
 - Activation choice matters: ReLU avoids vanishing gradients but unbounded; sigmoid/tanh saturate—remember derivative shapes.
-- Dropout expectation: at train time multiply activations by Bernoulli mask; at inference scale weights by keep probability to preserve expected activation.
+- Dropout expectation: standard dropout preserves expected activations by scaling at inference; inverted dropout, used by most modern frameworks, scales during training and leaves inference unchanged.
 - Batch norm normalises per mini-batch then rescales by learned $\gamma$, $\beta$; stabilises gradients and allows higher learning rates.
 - Convolution advantages: sparse connectivity, weight sharing; receptive field grows with depth/pooling; compute output shape via $(n + 2p - k)/s + 1$.
 - Parameter counts: conv layer parameters $k_h \times k_w \times C_{\text{in}} \times C_{\text{out}} + C_{\text{out}}$; exam may ask to compare vs. dense layers.
@@ -502,7 +502,7 @@ $$\sum_{i,j} \|x_j - x_i\|_2^2 = \sum_{i,j} (\|x_j\|_2^2 + \|x_i\|_2^2 - 2 x_i^\
 Divide by $N^2$ to obtain $m_2 = \tfrac{1}{N^2} \sum_{i,j} \|x_j - x_i\|_2^2 = \tfrac{2}{N} \sum_i \|x_i - \mu\|_2^2 = 2 m_1$.
 
 #### Problem 3 – Diagonalising $XX^\top$
-**Question:** Let $X \in \mathbb{R}^{d \times d}$ and $P \in \mathbb{R}^{d \times d}$. Assume each row of $P$ is an independent eigenvector of $XX^\top$. What kind of matrix is $P XX^\top P^\top$?
+**Question:** Let $X \in \mathbb{R}^{d \times d}$ and $P \in \mathbb{R}^{d \times d}$. Assume the rows of $P$ form an orthonormal eigenbasis of $XX^\top$. What kind of matrix is $P XX^\top P^\top$?
 - Identity Matrix
 - Diagonal Matrix
 - Zero Matrix
