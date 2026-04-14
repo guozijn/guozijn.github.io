@@ -30,7 +30,7 @@ tags:
 
 **Home Assistant Docker Services**
 
-![Home Assistant Docker services](https://images.zijianguo.com/sfbox01.png){:width="90%"}
+![Home Assistant Docker services](https://images.zjguo.com/sfbox01.png){:width="90%"}
 
 ## 三、设备接入
 
@@ -42,22 +42,22 @@ tags:
 
 2. 在 HACS 安装插件 **Xiaomi Miot Auto**。
 
-    ![Xiaomi Miot Auto](https://images.zijianguo.com/ha03.png){:width="90%"}
+    ![Xiaomi Miot Auto](https://images.zjguo.com/ha03.png){:width="90%"}
 
 3. 添加米家账号并导入设备。
 
-    ![Device and Service](https://images.zijianguo.com/ha05.png){:width="90%"}
-    ![Miiot](https://images.zijianguo.com/miiot01.png){:width="90%"}
+    ![Device and Service](https://images.zjguo.com/ha05.png){:width="90%"}
+    ![Miiot](https://images.zjguo.com/miiot01.png){:width="90%"}
 
 4. 创建 **HomeKit Bridge** 并桥接至 HomeKit。
    - 注意：一个桥接中只能有一个空调，所以我把卧室空调单独建桥。
 
-    ![hb01](https://images.zijianguo.com/hb01.png){:width="90%"}
-    ![hb02](https://images.zijianguo.com/hb02.png){:width="90%"}
+    ![hb01](https://images.zjguo.com/hb01.png){:width="90%"}
+    ![hb02](https://images.zjguo.com/hb02.png){:width="90%"}
 
 最终在 iOS “家庭”App 中能直接看到米家设备，并通过按钮或 Siri 控制。
 
-![homeapp](https://images.zijianguo.com/homeapp.jpeg){:width="30%"}
+![homeapp](https://images.zjguo.com/homeapp.jpeg){:width="30%"}
 
 ### 涂鸦设备
 
@@ -67,17 +67,17 @@ tags:
 
 1. 在 **涂鸦开发者平台** 创建云项目，配置权限。
 
-    ![ty01](https://images.zijianguo.com/ty01.png){:width="90%"}
-    ![ty03](https://images.zijianguo.com/ty03.png){:width="90%"}
+    ![ty01](https://images.zjguo.com/ty01.png){:width="90%"}
+    ![ty03](https://images.zjguo.com/ty03.png){:width="90%"}
 
 2. 在涂鸦或“智能生活”App 中完成设备配对与学习遥控信号。
 
-    ![tyapp01](https://images.zijianguo.com/tyapp01.png){:width="30%"}
-    ![tyapp02](https://images.zijianguo.com/tyapp02.png){:width="30%"}
+    ![tyapp01](https://images.zjguo.com/tyapp01.png){:width="30%"}
+    ![tyapp02](https://images.zjguo.com/tyapp02.png){:width="30%"}
 
 3. 将密钥填入 HA，设备，在HomeKit Bridge中添加对应的开关，即可出现在 HomeKit 中。
 
-    ![ty04](https://images.zijianguo.com/ty04.png){:width="90%"}
+    ![ty04](https://images.zjguo.com/ty04.png){:width="90%"}
 
 ### 其他设备接入方案
 

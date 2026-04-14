@@ -61,6 +61,6 @@ tags:
   where $\eta > 0$ is the learning rate controlling the step size.  
 
 ## Architecture of a Single-Layer Neural Network
-![single_layer_nn_matrix.png](https://images.zijianguo.com/single_layer_nn_matrix.png)
+![single_layer_nn_matrix.png](https://images.zjguo.com/single_layer_nn_matrix.png)
 
 This diagram illustrates a **single-layer neural network for binary classification**. The input is represented as a feature vector $\mathbf{x} \in \mathbb{R}^n$, and the parameters of the model are a weight vector $\mathbf{w} \in \mathbb{R}^n$ and a bias term $b \in \mathbb{R}$. The linear combination is computed as $z = \mathbf{w}^\top \mathbf{x} + b$. This value is then passed through a sigmoid activation function $\sigma(z) = \frac{1}{1+e^{-z}}$, which outputs a probability $p = \Pr(y=1 \mid \mathbf{x}) = \sigma(z)$, representing the likelihood that the class label $y$ equals 1. Finally, the probability is compared to a threshold $\tau$ (e.g., 0.5) to produce the predicted class label $y \in \{0,1\}$. The decision boundary of this model is defined by $\mathbf{w}^\top \mathbf{x} + b = 0$.

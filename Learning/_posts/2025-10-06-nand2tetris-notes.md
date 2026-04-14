@@ -19,11 +19,11 @@ $$
 ## Boolean Arithmetic (Combinational Logic)
 #### Half Adder
 
-![half-adder.png](https://images.zijianguo.com/half-adder.png)
+![half-adder.png](https://images.zjguo.com/half-adder.png)
 
 #### Full Adder
 
-![full-adder.png](https://images.zijianguo.com/full-adder.png)
+![full-adder.png](https://images.zjguo.com/full-adder.png)
 
 #### Two’s Complement
 ##### Quick Flow
@@ -163,18 +163,18 @@ Decimal | Two’s Complement
 
 ### DFF
 
-![dff.png](https://images.zijianguo.com/dff.png)
+![dff.png](https://images.zjguo.com/dff.png)
 
 ### Bit (1-bit register)
 
-![1-bit-register.png](https://images.zijianguo.com/1-bit-register.png)
+![1-bit-register.png](https://images.zjguo.com/1-bit-register.png)
 
 ## Computer Architecture
 
-![hack-computer.png](https://images.zijianguo.com/hack-computer.png)
+![hack-computer.png](https://images.zjguo.com/hack-computer.png)
 
 ### ALU
-![alu.png](https://images.zijianguo.com/alu.png)
+![alu.png](https://images.zjguo.com/alu.png)
 
 ### ALU Notes
 - In two's complement representation, the bitwise NOT operation $!y$ can be expressed as $!y = -y - 1$.
@@ -201,7 +201,7 @@ M=0
 ```
 
 ### C-instruction
-![c-instructions.png](https://images.zijianguo.com/c-instructions.png)
+![c-instructions.png](https://images.zjguo.com/c-instructions.png)
 
 **Form**
 ```
@@ -707,16 +707,16 @@ A=M
 ### Program Control
 #### Subroutines & Functions
 ##### Stack Implementation
-![vm-stack-implementation.png](https://images.zijianguo.com/vm-stack-implementation.png)
+![vm-stack-implementation.png](https://images.zjguo.com/vm-stack-implementation.png)
 
 ##### Call Implementation
-![vm-call-command.png](https://images.zijianguo.com/vm-call-command.png)
+![vm-call-command.png](https://images.zjguo.com/vm-call-command.png)
 
 ##### Function Implementation
-![vm-function-command.png](https://images.zijianguo.com/vm-function-command.png)
+![vm-function-command.png](https://images.zjguo.com/vm-function-command.png)
 
 ##### Return Implementation
-![vm-return-command.png](https://images.zijianguo.com/vm-return-command.png)
+![vm-return-command.png](https://images.zjguo.com/vm-return-command.png)
 
 ### Memory Architecture of the Hack Virtual Machine
 The Hack Virtual Machine is implemented on a stack-based architecture.
@@ -935,16 +935,16 @@ Use per subroutine counters, labels must be unique per function, for example `IF
 
 #### Handling Objects
 
-![jack-handling-objects-1.png](https://images.zijianguo.com/jack-handling-objects-1.png)
+![jack-handling-objects-1.png](https://images.zjguo.com/jack-handling-objects-1.png)
 
-![jack-handling-objects-2.png](https://images.zijianguo.com/jack-handling-objects-2.png)
+![jack-handling-objects-2.png](https://images.zjguo.com/jack-handling-objects-2.png)
 
 #### Handling Arrays
 
-![jack-handling-arrays-1.png](https://images.zijianguo.com/jack-handling-arrays-1.png)
+![jack-handling-arrays-1.png](https://images.zjguo.com/jack-handling-arrays-1.png)
 
-![jack-handling-arrays-2.png](https://images.zijianguo.com/jack-handling-arrays-2.png)
+![jack-handling-arrays-2.png](https://images.zjguo.com/jack-handling-arrays-2.png)
 
 #### Example
 
-![jack-example.png](https://images.zijianguo.com/jack-example.png)
+![jack-example.png](https://images.zjguo.com/jack-example.png)

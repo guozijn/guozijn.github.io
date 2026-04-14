@@ -54,7 +54,7 @@ tags:
 
 ## Architecture of a Multi-Layer Perceptron Neural Network
 
-![mlp_architecture.png](https://images.zijianguo.com/mlp_architecture.png)
+![mlp_architecture.png](https://images.zjguo.com/mlp_architecture.png)
 
 ## Formulas
 
