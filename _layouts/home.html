@@ -25,9 +25,9 @@ layout: default
                 {%- assign post_category_key = post_category | downcase -%}
                 {%- assign post_category_label = post_category -%}
                 {%- case post_category_key -%}
-                  {%- when 'life', 'journal' -%}
-                    {%- assign post_category_key = 'journal' -%}
-                    {%- assign post_category_label = 'Journal' -%}
+                  {%- when 'life' -%}
+                    {%- assign post_category_key = 'life' -%}
+                    {%- assign post_category_label = 'Life' -%}
                   {%- when 'study', 'learning' -%}
                     {%- assign post_category_key = 'learning' -%}
                     {%- assign post_category_label = 'Learning' -%}

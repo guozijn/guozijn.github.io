@@ -701,7 +701,7 @@ div.highlight, div.highlight .w { color: #24292f; background-color: #f6f8fa; }
   font-weight: 700;
   letter-spacing: 0.08em;
 }
-.post-card__cat--journal {
+.post-card__cat--life {
   background: #ecfdf5;
   color: #047857;
 }
@@ -739,7 +739,7 @@ div.highlight, div.highlight .w { color: #24292f; background-color: #f6f8fa; }
   box-shadow: 0 6px 16px rgba(0,0,0,0.28), 0 18px 36px rgba(0,0,0,0.24);
 }
 
-.dark-mode .post-card__cat--journal {
+.dark-mode .post-card__cat--life {
   background: rgba(16, 185, 129, 0.14);
   color: #6ee7b7;
 }
