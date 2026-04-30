@@ -21,7 +21,7 @@ baseurl: "" # the subpath of your site, e.g. /blog
 github_username: guozijn
 linkedin_username: guozijn
 twitter_username:
-url: "https://guozijn.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://blog.zjguo.com" # the base hostname & protocol for your site, e.g. http://example.com
 timezone: Australia/Adelaide
 
 # Build settings
@@ -65,4 +65,4 @@ kramdown:
 disqus:
   shortname: guozijn
 home_posts_limit: 10
-cv_page: https://zijianguo.com
+cv_page: https://ziguo.com/cv
